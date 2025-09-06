@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title> 
+    <style>
+        body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url(fundofutebol.jpg);
+        background-size: cover;   /* Faz a imagem cobrir toda a tela */
+        background-position: center; /* Centraliza a imagem */
+        background-repeat: no-repeat; /* Evita repetição */
+        margin: 0;
+        padding: 0;
+        height: 100vh; /* Garante que o body ocupe a tela toda */
+    }
+        div {
+            text-align: center;
+            background-color: rgba(0,0,0, 0.6);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            padding: 80px;
+            transform: translate(-50%,-50%);
+            border-radius: 20px;
+            color: white;
+
+        }
+        input{
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            border-radius: 5px;
+
+        }
+        button {
+            background-color: dodgerblue;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            color: white;
+            font-size: 15px;
+        }
+
+        /* Quando passar o mouse por cima ele muda a cor do botão*/
+        button:hover { 
+            background-color: deepskyblue;
+            cursor: pointer;
+        }
+
+        footer{
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            text-align: center;
+            padding: 0px;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: dodgerblue;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        header {
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        PENEIRADA FC
+    </header>
+
+    <div>
+    <h1>Login</h1>
+    <input type="text" placeholder="usuário"> 
+    <br><br>
+    <input type="password" placeholder="senha">
+    <br><br>
+    <form action="login2.html">
+        <button type="submit">CHECK</button>
+
+    </form>
+    </div>
+
+    <footer>
+        <p>📞 Telefone: (85) 9 9965-4164 | ✉️ Email: <a href="mailto:studentforads@gmail.com">studentforads@gmail.com</a> | 📍 Endereço: Senac - Fortaleza / CE</p>
+    </footer>
+</body>
+</html>
