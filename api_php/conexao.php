@@ -1,7 +1,7 @@
 <?php
-$host = 'localhost';
-$user = 'root';
-$pass = ''; // deixe vazio se usa senha no XAMPP
+$host = 'mysql';
+$user = 'peneirauser';
+$pass = 'peneira123';
 $db   = 'peneirada';
 
 $conn = new mysqli($host, $user, $pass, $db);

@@ -1,9 +1,9 @@
 <?php
 // config.php - ajuste as credenciais se necessário
-$DB_HOST = 'localhost';
+$DB_HOST = 'mysql';
 $DB_NAME = 'peneirada';
-$DB_USER = 'root';
-$DB_PASS = '';
+$DB_USER = 'peneirauser';
+$DB_PASS = 'peneira123';
 
 try {
     $pdo = new PDO("mysql:host={$DB_HOST};dbname={$DB_NAME};charset=utf8mb4", $DB_USER, $DB_PASS, [
