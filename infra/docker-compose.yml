@@ -21,3 +21,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  api_php:
+    build:
+      context: ../api_php
+      dockerfile: Dockerfile
+    container_name: peneirada-api-php
+    restart: unless-stopped
+    volumes:
+      - ../api_php:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=peneirauser
+      - DB_PASSWORD=peneira123
+      - DB_DATABASE=peneirada
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - default
