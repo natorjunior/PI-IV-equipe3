@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peneirada FC - Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #4CD5C5; /* Verde água */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      background: transparent;
+      width: 350px;
+      text-align: center;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 10px 0 20px;
+      font-size: 15px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .tab {
+      cursor: pointer;
+      padding-bottom: 5px;
+      color: #000;
+    }
+    a {
+      color: black;
+      text-align: center;
+      font-size: 18px;
+    }
+
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #333;
+      background: #fff;
+      font-size: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      background-color: black;
+      color: white;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #000;
+      margin-top: 30px;
+    }
+    #botaoLogin{
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="logo.png" alt="" width="100px">
+    </div>
+
+    <!-- Abas -->
+    <div class="tabs">
+        <div class="tab active" id="tab-cadastro">
+         <a href="cadastro.html">
+
+           Cadastre-se
+         </a> 
+        
+        </div>
+        <div class="tab" id="tab-login">
+          <a href="login.html">
+
+            Entrar
+
+          </a>
+        </div>
+    </div>
+
+    <!-- Título -->
+    <h1>Seja bem-vindo</h1>
+    <p class="subtitle">Adicione suas credenciais nos campos abaixo</p>
+
+    <!-- Formulário -->
+    <form id="form">
+     
+        <label for="email">Email*</label>
+      <input type="email" id="email" placeholder="Digite seu email">
+     
+      <label for="senha">Senha*</label>
+      <input type="password" id="senha" placeholder="Digite sua senha">
+        <form >
+            <button class="btn" type="submit">
+              <a id="botaoLogin" href="home.html">Login</a>
+            </button>
+        </form>
+    </form>
+
+    <div class="footer">© 2025 Peneirada FC</div>
+  </div>
+</body>
+</html>
