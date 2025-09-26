@@ -10,7 +10,9 @@
 <body>
   <header class="topbar">
     <div class="wrap">
-      <div class="brand">Peneirada</div>
+      <div class="brand">
+        <img src="" alt="">
+      </div>
       <nav class="menu">
         <?php if(!empty($_SESSION['user_id'])): ?>
           <a href="feed.php">Feed</a>
@@ -27,7 +29,7 @@
   <main class="hero">
     <div class="card">
       <div class="logo">
-        <img src="assets/logo.svg" alt="Logo Peneirada" width="120" height="160" onerror="this.src='https://via.placeholder.com/120x160?text=Logo+Não+Carregada';">
+        <img src="../imagens/logo.png" alt="Logo Peneirada" width="120" height="160" onerror="this.src='https://via.placeholder.com/120x160?text=Logo+Não+Carregada';">
       </div>
       <h1>Bem-vindo à Peneirada</h1>
       <p>Plataforma que conecta jovens atletas (a partir de 16 anos) a olheiros e clubes. Cadastre-se e mostre seu talento.</p>

@@ -8,7 +8,19 @@
 </head>
 <body>
 <header class="topbar"><div class="wrap"><div class="brand">Peneirada</div>
-<nav class="menu"><a href="index.php">Início</a><a href="feed.php">Feed</a><a href="#" id="logoutLink">Sair</a></nav></div></header>
+<nav class="menu">
+  <a href="index.php">
+    Início
+  </a>
+  <a href="feed.php">
+    Feed
+  </a>
+  <a href="#" id="logoutLink">
+    Sair
+  </a>
+</nav>
+</div>
+</header>
 
 <main class="wrap main-grid">
   <aside class="sidebar">

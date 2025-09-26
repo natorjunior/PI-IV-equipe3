@@ -11,23 +11,26 @@ if(!empty($_SESSION['user_id'])) header('Location: feed.php');
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
+
+<!-- HEADER TRANSPARENTE -->
 <header class="topbar">
   <div class="wrap">
     <!-- Logo à esquerda -->
-    <div class="brand">
-      <img src="../imagens/logo.png" alt="Logo Peneirada">
+    <div class="logo">
+      <img src="../imagens/logo.png" >
     </div>
 
     <!-- Botões à direita -->
     <nav class="menu">
-      <a href="login.php" class="btn">Login</a>
-      <a href="cadastro.php" class="btn btn-outline">Cadastro</a>
+      <a href="login.php" class="btn btn-outline">Login</a>
+      <a href="cadastro.php" class="btn">Cadastro</a>
     </nav>
   </div>
 </header>
+
 <!-- CONTEÚDO CENTRAL -->
 <main class="center">
-  <div class="card small">
+  <div class="container">
 
     <!-- Título -->
     <h1>Seja bem-vindo</h1>
@@ -45,10 +48,8 @@ if(!empty($_SESSION['user_id'])) header('Location: feed.php');
     </form>
 
     <!-- Footer -->
+    <div class="footer">© 2025 Peneirada FC</div>
   </div>
-  <footer>
-  <p id="footer">© 2025 Peneirada FC</p>
-</footer>
 </main>
 
 <!-- SCRIPT LOGIN -->
