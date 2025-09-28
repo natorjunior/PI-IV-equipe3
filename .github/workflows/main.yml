@@ -1,0 +1,79 @@
+name: Deploy automático
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      # 1) Checkout do repositório
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2) Carrega a chave SSH
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 3) Deploy em homologação (develop)
+      - name: Deploy Homolog (develop)
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              -tt \
+              -p ${{ secrets.SSH_PORT }} \
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+
+            # Desce qualquer instância atual, ignora erros
+            docker-compose -f docker-compose.yml down --remove-orphans || true
+            
+            # Garante que está na branch develop
+            git fetch
+            git checkout develop
+            git pull
+            
+            # Limpa imagens não usadas
+            #docker image prune -f || true
+
+            # Puxa e sobe o stack
+            docker-compose -f docker-compose.yml pull
+            docker-compose -f docker-compose.yml up -d --build
+
+            # garante retorno zero
+            exit 0
+          EOF
+
+
+      # 4) Deploy em produção (main)
+      - name: Deploy Prod (main)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -p ${{ secrets.SSH_PORT }} \
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            
+            # Garante que está na branch develop
+            git fetch
+            git checkout main
+            git pull
+            
+            # Para containers orfãos e stack atual
+            docker-compose -f docker-compose.yml down --remove-orphans || true
+
+            # Limpa imagens não usadas
+            docker image prune -f || true
+
+            # Puxa as novas imagens
+            docker-compose -f docker-compose.yml pull
+
+            # Sobe o stack em background
+            docker-compose -f docker-compose.yml up -d
+          EOF
