@@ -21,7 +21,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3) Deploy em homologação (develop) 
+      # Homolog (develop)
       - name: Deploy Homolog (develop)
         if: github.ref == 'refs/heads/develop'
         run: |
@@ -30,50 +30,21 @@ jobs:
               -tt \
               -p ${{ secrets.SSH_PORT }} \
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-
-            # Desce qualquer instância atual, ignora erros
+            set -euo pipefail
+      
+            REMOTE_DIR="/var/www/PI-V_equipe3"   # <-- AJUSTE AQUI
+            cd "$REMOTE_DIR"
+      
             docker-compose -f docker-compose.yml down --remove-orphans || true
-            
-            # Garante que está na branch develop
-            git fetch
+      
+            # Atualiza código (o servidor precisa ter credenciais para ler o repo)
+            git fetch origin
             git checkout develop
-            git pull
-            
-            # Limpa imagens não usadas
-            #docker image prune -f || true
-
-            # Puxa e sobe o stack
+            git pull origin develop
+      
             docker-compose -f docker-compose.yml pull
             docker-compose -f docker-compose.yml up -d --build
-
-            # garante retorno zero
+      
             exit 0
           EOF
 
-
-      # 4) Deploy em produção (main)
-      - name: Deploy Prod (main)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-              -p ${{ secrets.SSH_PORT }} \
-              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            
-            # Garante que está na branch develop
-            git fetch
-            git checkout main
-            git pull
-            
-            # Para containers orfãos e stack atual
-            docker-compose -f docker-compose.yml down --remove-orphans || true
-
-            # Limpa imagens não usadas
-            docker image prune -f || true
-
-            # Puxa as novas imagens
-            docker-compose -f docker-compose.yml pull
-
-            # Sobe o stack em background
-            docker-compose -f docker-compose.yml up -d
-          EOF
