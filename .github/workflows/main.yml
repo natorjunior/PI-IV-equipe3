@@ -21,7 +21,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3) Deploy em homologação (develop)
+      # 3) Deploy em homologação (develop) 
       - name: Deploy Homolog (develop)
         if: github.ref == 'refs/heads/develop'
         run: |
