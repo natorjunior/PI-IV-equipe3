@@ -21,51 +21,31 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy Homolog (develop)
+      - name: Deploy (develop)
         if: github.ref == 'refs/heads/develop'
         run: |
           ssh -o StrictHostKeyChecking=no \
               -o BatchMode=yes \
-              -o LogLevel=ERROR \
               -p "${{ secrets.SSH_PORT }}" \
               "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << 'EOF'
             set -euo pipefail
-      
             REMOTE_DIR="/var/www/PI-V_equipe3"
-            REPO_SSH="git@github.com:natorjunior/PI-V_equipe3.git"   # OU use HTTPS com PAT
-            BRANCH="develop"
-      
-            # 1) Preparar diretório
-            sudo mkdir -p "$REMOTE_DIR"
-            sudo chown -R "$USER:$USER" "$REMOTE_DIR"
             cd "$REMOTE_DIR"
       
-            # 2) Se não for git, inicializa/clone
-            if [ ! -d ".git" ]; then
-              git init
-              git remote add origin "$REPO_SSH" || git remote set-url origin "$REPO_SSH"
-              git fetch origin "$BRANCH" --depth=1
-              git checkout -b "$BRANCH" "origin/$BRANCH"
-            else
-              # 3) Atualiza repo existente
-              git remote set-url origin "$REPO_SSH"
-              git fetch origin
-              git checkout "$BRANCH"
-              git reset --hard "origin/$BRANCH"
-            fi
-      
-            # 4) Docker Compose v1 ou v2 (tente v2; caia para v1 se não houver)
+            # Compose v1/v2
             if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
               COMPOSE="docker compose"
             else
               COMPOSE="docker-compose"
             fi
       
-            # 5) Subir stack
+            # Atualiza código (servidor precisa ter credencial própria!)
+            git fetch origin
+            git checkout develop
+            git reset --hard origin/develop
+      
             $COMPOSE -f docker-compose.yml down --remove-orphans || true
             $COMPOSE -f docker-compose.yml pull
             $COMPOSE -f docker-compose.yml up -d --build
-      
             exit 0
           EOF
-
