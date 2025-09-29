@@ -20,32 +20,45 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy (develop)
+      - name: Deploy Homolog (develop)
         if: github.ref == 'refs/heads/develop'
         run: |
-          ssh -o StrictHostKeyChecking=no \
-              -o BatchMode=yes \
+          ssh -o StrictHostKeyChecking=no -o BatchMode=yes \
               -p "${{ secrets.SSH_PORT }}" \
               "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << 'EOF'
             set -euo pipefail
-            REMOTE_DIR="/var/www/PI-V_equipe3"
+      
+            REMOTE_DIR="/var/www/PI-V_equipe3"             # << ajuste se precisar
+            REPO_URL="git@github.com:natorjunior/PI-V_equipe3.git"  # ou HTTPS+PAT
+            BRANCH="develop"
+      
+            # 1) preparar diretório (sem sudo no workflow; faça o chown 1x manualmente se precisar)
+            mkdir -p "$REMOTE_DIR"
             cd "$REMOTE_DIR"
       
-            # Compose v1/v2
+            # 2) clonar na primeira vez OU atualizar se já existe
+            if [ ! -d .git ]; then
+              git init
+              git remote add origin "$REPO_URL" || git remote set-url origin "$REPO_URL"
+              git fetch origin "$BRANCH" --depth=1
+              git checkout -b "$BRANCH" "origin/$BRANCH"
+            else
+              git remote set-url origin "$REPO_URL"
+              git fetch origin
+              git checkout "$BRANCH"
+              git reset --hard "origin/$BRANCH"
+            fi
+      
+            # 3) escolher docker compose v2 ou v1
             if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
               COMPOSE="docker compose"
             else
               COMPOSE="docker-compose"
             fi
       
-            # Atualiza código (servidor precisa ter credencial própria!)
-            git fetch origin
-            git checkout develop
-            git reset --hard origin/develop
-      
-            $COMPOSE -f docker-compose.yml down --remove-orphans || true
-            $COMPOSE -f docker-compose.yml pull
-            $COMPOSE -f docker-compose.yml up -d --build
+            # 4) subir stack
+            \$COMPOSE -f docker-compose.yml down --remove-orphans || true
+            \$COMPOSE -f docker-compose.yml pull
+            \$COMPOSE -f docker-compose.yml up -d --build
             exit 0
           EOF
