@@ -47,6 +47,5 @@ jobs:
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d --build
 
-            # garante retorno zero
-            exit 0
+
           EOF
