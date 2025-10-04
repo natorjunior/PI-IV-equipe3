@@ -39,13 +39,13 @@ jobs:
             git pull --ff-only
       
             echo '===> compose down (homolog)'
-            docker compose -f docker-compose-homolog.yml down --remove-orphans || true
+            docker compose -f docker-compose.yml down --remove-orphans || true
       
             echo '===> compose pull/build/up (homolog)'
-            docker compose -f docker-compose-homolog.yml pull
-            docker compose -f docker-compose-homolog.yml up -d --build
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d --build
       
             echo '===> status'
-            docker compose -f docker-compose-homolog.yml ps
+            docker compose -f docker-compose.yml ps
           "
 
