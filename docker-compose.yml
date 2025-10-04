@@ -58,3 +58,5 @@ services:
       - mysql
     networks:
       - default
+volumes:
+  mysql_data:
