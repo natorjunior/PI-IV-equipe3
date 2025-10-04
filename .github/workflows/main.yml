@@ -23,42 +23,30 @@ jobs:
       - name: Deploy Homolog (develop)
         if: github.ref == 'refs/heads/develop'
         run: |
-          ssh -o StrictHostKeyChecking=no -o BatchMode=yes \
-              -p "${{ secrets.SSH_PORT }}" \
-              "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << 'EOF'
-            set -euo pipefail
-      
-            REMOTE_DIR="/var/www/PI-V_equipe3"             # << ajuste se precisar
-            REPO_URL="git@github.com:natorjunior/PI-V_equipe3.git"  # ou HTTPS+PAT
-            BRANCH="develop"
-      
-            # 1) preparar diretório (sem sudo no workflow; faça o chown 1x manualmente se precisar)
-            mkdir -p "$REMOTE_DIR"
-            cd "$REMOTE_DIR"
-      
-            # 2) clonar na primeira vez OU atualizar se já existe
-            if [ ! -d .git ]; then
-              git init
-              git remote add origin "$REPO_URL" || git remote set-url origin "$REPO_URL"
-              git fetch origin "$BRANCH" --depth=1
-              git checkout -b "$BRANCH" "origin/$BRANCH"
-            else
-              git remote set-url origin "$REPO_URL"
-              git fetch origin
-              git checkout "$BRANCH"
-              git reset --hard "origin/$BRANCH"
-            fi
-      
-            # 3) escolher docker compose v2 ou v1
-            if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-              COMPOSE="docker compose"
-            else
-              COMPOSE="docker-compose"
-            fi
-      
-            # 4) subir stack
-            \$COMPOSE -f docker-compose.yml down --remove-orphans || true
-            \$COMPOSE -f docker-compose.yml pull
-            \$COMPOSE -f docker-compose.yml up -d --build
+          ssh -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              -tt \
+              -p ${{ secrets.SSH_PORT }} \
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+
+            cd /root/SENAC/2025.2/PI-IV-equipe3
+
+            # Desce qualquer instância atual, ignora erros
+            docker-compose -f docker-compose-homolog.yml down --remove-orphans || true
+            
+            # Garante que está na branch develop
+            git fetch
+            git checkout develop
+            git pull
+            
+            # Limpa imagens não usadas
+            #docker image prune -f || true
+
+            # Puxa e sobe o stack
+            docker-compose -f docker-compose-homolog.yml pull
+            docker-compose -f docker-compose-homolog.yml up -d --build
+
+            # garante retorno zero
             exit 0
           EOF
