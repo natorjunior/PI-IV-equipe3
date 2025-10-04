@@ -30,7 +30,7 @@ jobs:
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
 
-            cd /root/SENAC/2025.2/PI-IV-equipe3
+            cd /home/nator/PI-IV-equipe3
 
             # Desce qualquer instância atual, ignora erros
             docker-compose -f docker-compose-homolog.yml down --remove-orphans || true
