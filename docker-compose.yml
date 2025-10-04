@@ -36,7 +36,7 @@ services:
       - DB_PASSWORD=peneira123
       - DB_DATABASE=peneirada
     ports:
-      - "8080:80"
+      - "1520:80"
     depends_on:
       - mysql
     networks:
@@ -52,7 +52,7 @@ services:
       - PMA_PASSWORD=peneira123
       - PMA_ARBITRARY=1
     ports:
-      - "8081:80"
+      - "1521:80"
     depends_on:
       - mysql
     networks:
