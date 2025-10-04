@@ -31,7 +31,7 @@ jobs:
             set -e
 
             cd /home/nator/PI-IV-equipe3
-
+            mkdir mysql_data
             # Desce qualquer instância atual, ignora erros
             docker compose -f docker-compose-homolog.yml down --remove-orphans || true
             
