@@ -12,7 +12,7 @@ services:
       TZ: America/Fortaleza
       LANG: C.UTF-8
     ports:
-      - "3309:3306"
+      - "1520:3306"
     volumes:
       - ./infra/sql:/docker-entrypoint-initdb.d
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -36,7 +36,7 @@ services:
       - DB_PASSWORD=peneira123
       - DB_DATABASE=peneirada
     ports:
-      - "1520:80"
+      - "1521:80"
     depends_on:
       - mysql
     networks:
@@ -52,7 +52,7 @@ services:
       - PMA_PASSWORD=peneira123
       - PMA_ARBITRARY=1
     ports:
-      - "1521:80"
+      - "1522:80"
     depends_on:
       - mysql
     networks:
