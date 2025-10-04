@@ -25,26 +25,27 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no \
               -o BatchMode=yes \
-              -tt \
+              -T \
               -p ${{ secrets.SSH_PORT }} \
-              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            set -Eeuo pipefail
+            trap 's=\$?; echo \"[ERRO] linha \${BASH_LINENO[0]} (cmd: \${BASH_COMMAND}) -> exit \$s\" >&2; exit \$s' ERR
+      
             cd /home/nator/PI-IV-equipe3
-            # Desce qualquer instância atual, ignora erros
-            docker compose -f docker-compose-homolog.yml down --remove-orphans || true
-            
-            # Garante que está na branch develop
+      
+            echo '===> branch develop'
             git fetch
             git checkout develop
-            git pull
-            
-            # Limpa imagens não usadas
-            #docker image prune -f || true
+            git pull --ff-only
+      
+            echo '===> compose down (homolog)'
+            docker compose -f docker-compose-homolog.yml down --remove-orphans || true
+      
+            echo '===> compose pull/build/up (homolog)'
+            docker compose -f docker-compose-homolog.yml pull
+            docker compose -f docker-compose-homolog.yml up -d --build
+      
+            echo '===> status'
+            docker compose -f docker-compose-homolog.yml ps
+          "
 
-            # Puxa e sobe o stack
-            docker compose -f docker-compose.yml pull
-            docker compose -f docker-compose.yml up -d --build
-
-            exit 0
-          EOF
