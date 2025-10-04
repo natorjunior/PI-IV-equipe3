@@ -44,8 +44,8 @@ jobs:
             #docker image prune -f || true
 
             # Puxa e sobe o stack
-            docker-compose -f docker-compose-homolog.yml pull
-            docker-compose -f docker-compose-homolog.yml up -d --build
+            docker-compose -f docker-compose.yml pull
+            docker-compose -f docker-compose.yml up -d --build
 
             # garante retorno zero
             exit 0
