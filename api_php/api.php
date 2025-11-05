@@ -192,7 +192,7 @@ posts, pois do jeito que está ele não identifica quem fez a publicação*/
 // ============================================================
 if ($action === 'list_posts') {
     $stmt = $pdo->query('
-        SELECT p.id, p.user_id, p.content, p.image, u.nome AS user_name
+	SELECT p.id, p.user_id, p.content, p.image,u.avatar, u.nome AS user_name
         FROM posts p
         JOIN usuarios u ON p.user_id = u.id
         ORDER BY p.created_at DESC
@@ -200,9 +200,9 @@ if ($action === 'list_posts') {
     ');
     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($posts as &$p) {
-        if (empty($p['image'])) $p['image'] = null;
-    }
+    #foreach ($posts as &$p) {
+    #    if (empty($p['image'])) $p['image'] = null;
+    #}
     unset($p);
 
     echo json_encode(['status' => 'ok', 'posts' => $posts]);

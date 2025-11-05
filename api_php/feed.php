@@ -147,7 +147,7 @@ if (empty($_SESSION['user_id'])) {
                             <div class="post-image"><img src="${p.image}" alt="Imagem do post"></div>
                         ` : '';
 
-                        div.innerHTML = `${userNameHtml}
+                        div.innerHTML = `<div class="user-profile" style="display:flex"><img src="${p.avatar}" class="avatar"> ${userNameHtml}</div>
                             <div class="post-content">
                                 <p>${escapeHtml(p.content)}</p>
                                 ${imgHtml}
