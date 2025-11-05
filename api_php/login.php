@@ -15,13 +15,15 @@ if(!empty($_SESSION['user_id'])) header('Location: feed.php');
   <div class="wrap">
     <!-- Logo à esquerda -->
     <div class="brand">
-      <img src="../imagens/logo.png" alt="Logo Peneirada">
+      <a href="index.php">
+        <img src="../imagens/logo.png" alt="Logo Peneirada">
+      </a>
     </div>
 
     <!-- Botões à direita -->
     <nav class="menu">
       <a href="login.php" class="btn">Login</a>
-      <a href="cadastro.php" class="btn btn-outline">Cadastro</a>
+      <a href="cadastro.php" class="btn btn-outline">Register</a>
     </nav>
   </div>
 </header>

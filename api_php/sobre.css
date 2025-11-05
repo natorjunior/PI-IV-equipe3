@@ -1,11 +1,9 @@
 * {
   box-sizing: border-box;
 }
-
 html {
   height: 100%;
 }
-
 body {
   font-family: Inter, Segoe UI, Arial, sans-serif;
   background: #4CD5C5; 
@@ -15,13 +13,15 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
-
+/* Logo */
+.brand img {
+  height: 50px; /* ajuste o tamanho do logo aqui */
+}
 .wrap {
   max-width: 1000px;
   margin: 0 auto;
   padding: 18px;
 }
-
 .topbar {
   backdrop-filter: blur(6px);
   position: sticky;
@@ -29,30 +29,16 @@ body {
   border-bottom: none;
   z-index: 10;
 }
-
-/* ============================================ */
-/* <<< MUDANÇA AQUI: Alinhamento do Header */
-/* ============================================ */
 .topbar .wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-/* ============================================ */
-/* <<< MUDANÇA AQUI: Menu vira um container flex */
-/* ============================================ */
 .menu {
-  /* display: inline-block; (Removido) */
-  /* float: right; (Removido) */
   display: flex;
   align-items: center;
   gap: 10px; /* Espaçamento entre os botões */
 }
-
-/* ============================================ */
-/* <<< MUDANÇA AQUI: Links viram botões */
-/* ============================================ */
 .menu a {
   /* margin-left: 12px; (Removido, 'gap' substitui) */
   /* color: rgb(12, 170, 255); (Removido) */
@@ -78,14 +64,6 @@ body {
 /* FIM DAS MUDANÇAS */
 /* ============================================ */
 
-
-.hero {
-  display: grid;
-  place-items: center;
-  flex-grow: 1; 
-  padding: 40px 16px;
-}
-
 .card {
   background: white;
   border-radius: 7px;
@@ -95,44 +73,4 @@ body {
   text-align: center;
   max-width: 550px;
   width: 100%;
-}
-
-.logo {
-  width: 160px;
-  display: block;
-  margin: 0 auto 14px;
-}
-
-.logo img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Container dos botões "Começar agora" e "Já tenho conta" */
-.actions {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 12px;
-  justify-content: center;
-  margin-top: 25px;
-}
-
-/* Estilo padrão do botão (dentro do card) */
-.btn {
-  display: inline-block;
-  background-color: #0b1220; 
-  color: #ffffff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn:hover {
-  background-color: #333;
 }

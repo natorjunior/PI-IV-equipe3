@@ -56,17 +56,19 @@
       cursor: pointer;
     }
 .menu .btn {
-  background-color: black;
-  color: white;
+  background-color: transparent;
+  color: black;
   padding: 8px 16px;
   text-decoration: none;
+  border: 1px solid black;
   border-radius: 4px;
   font-size: 14px;
   transition: background 0.2s;
 }
 
 .menu .btn:hover {
-  background-color: #333;
+  background-color: black;
+  color: white;
 }
 
 .menu .btn-outline {
