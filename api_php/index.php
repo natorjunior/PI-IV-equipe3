@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Peneirada - Rede de Olheiros</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <header class="topbar">
@@ -18,8 +18,6 @@
           <a href="feed.php">Feed</a>
           <a href="#" id="logoutBtn">Sair</a>
         <?php else: ?>
-          <a href="login.php">Login</a>
-          <a href="cadastro.php">Cadastro</a>
         <?php endif; ?>
         <a href="sobre.php">Sobre</a>
       </nav>
@@ -32,10 +30,10 @@
         <img src="../imagens/logo.png" alt="Logo Peneirada" width="120" height="160" onerror="this.src='https://via.placeholder.com/120x160?text=Logo+Não+Carregada';">
       </div>
       <h1>Bem-vindo à Peneirada</h1>
-      <p>Plataforma que conecta jovens atletas (a partir de 16 anos) a olheiros e clubes. Cadastre-se e mostre seu talento.</p>
+      <h3>Seu Olheiro Digital</h3>
       <div class="actions">
         <a class="btn" href="cadastro.php">Começar agora</a>
-        <a class="btn" style="background: var(--green); border: none;" href="login.php">Já tenho conta</a>
+        <a class="btn" href="login.php">Já tenho conta</a>
       </div>
     </div>
   </main>

@@ -1,0 +1,388 @@
+/* ======= RESET BÁSICO E CORREÇÃO DE LAYOUT ======= */
+*, *::before, *::after {
+    box-sizing: border-box; 
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* Mantido do CSS original */
+}
+
+/* ======= HEADER SUPERIOR (ATUALIZADO) ======= */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3AD8C5;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    /* 'box-shadow' removido, conforme o novo CSS */
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+}
+
+/* Estilo do .search-input ATUALIZADO para o novo CSS */
+.search-input {
+    width: 300px;
+    padding: 6px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    /* background-color removida, conforme o novo CSS */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+/* Perfil do usuário no header */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; 
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.user-handle {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Dropdown escondido (Mantido do CSS original) */
+.dropdown {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 150px;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.dropdown a {
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+.dropdown a:hover {
+    background: #eee;
+}
+
+/* Botões engrenagem e sino (ATUALIZADO) */
+.icon-button {
+    background: #fff; /* ATUALIZADO do novo CSS */
+    border: none;
+    padding: 8px;
+    border-radius: 6px; /* ATUALIZADO do novo CSS */
+    cursor: pointer;
+    
+    /* Mantido do CSS original para alinhamento */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button i {
+    font-size: 18px;
+}
+
+/* ======= SIDEBAR LATERAL (Mantido do CSS original) ======= */
+.sidebar {
+    width: 220px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    height: 100vh;
+    position: fixed;
+    top: 60px; 
+    left: 0;
+    overflow-y: auto;
+}
+/* ... (Estilos .user-box, .menu-item, etc. mantidos como antes) ... */
+.user-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.user-box .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.user-box h3 {
+    font-size: 16px;
+    margin: 0;
+    text-align: center;
+}
+.menu-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.menu-item:hover {
+    background: #f0f0f0;
+}
+.menu-item i {
+    width: 20px;
+    text-align: center;
+}
+.logout {
+    color: #e74c3c;
+}
+.logout:hover {
+    background: #fceaea;
+}
+
+
+/************************************************************/
+/* ======= Estrutura do Conteúdo Principal (Layout do CSS original) ======= */
+/* Usamos .main-grid e .feed porque seu HTML usa eles */
+/************************************************************/
+.main-grid {
+    padding-top: 80px; 
+    margin-left: 240px; /* 220px do sidebar + 20px de espaço */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.feed {
+    max-width: 680px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+/************************************************************/
+/* ======= ÁREA DE CRIAÇÃO DE POST (Mantido do CSS original) ======= */
+/* Usamos #postForm, .option-label, etc. porque seu HTML usa eles */
+/************************************************************/
+.feed > .card:first-child {
+    padding: 0;
+}
+#postForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+}
+#postForm textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 18px;
+    font-family: inherit;
+    height: 120px;
+    width: auto;
+    resize: vertical; 
+    background-color: #ffffff;
+}
+#postForm textarea::placeholder {
+    color: #888;
+}
+.post-options {
+    display: flex;
+    flex-direction: column; 
+    gap: 12px; 
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    margin-top: 5px;
+}
+.post-image img {
+    max-width: 100%; /* A imagem nunca será mais larga que o card */
+    height: auto;    /* A altura se ajusta automaticamente */
+    display: block;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+.option-label {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 6px;
+    padding: 10px 25px; 
+    border-radius: 6px;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #0095f6;
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+.option-label:hover {
+    background-color: #e4e6eb; 
+}
+.option-label i {
+    font-size: 20px;
+    color: #000000; 
+}
+
+ .option-label {
+    display: inline-flex;
+}
+.option-label:hover {
+    background-color: #007acc;
+    transform: scale(1.03);
+        }
+.option-label.selected {
+    background-color: #2ecc71;
+}
+
+
+#image {
+    display: none;
+}
+.btn {
+    background-color: #3AD8C5;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+    gap: 6px;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+.btn:hover {
+    background-color: #2abda9;
+    transform: scale(1.03);
+}
+
+
+/* ======= RESPONSIVIDADE (ATUALIZADO) ======= */
+/* Esta lógica foi pega do seu NOVO CSS */
+@media (max-width: 768px) {
+    .search-input {
+        /* Ocultado para consistência (regra do CSS original era melhor) */
+        display: none; 
+    }
+
+    .user-info {
+        display: none; /* esconder texto do perfil no header */
+    }
+
+    .sidebar {
+        width: 180px;
+    }
+
+    /* Precisamos ajustar o .main-grid, não o .main-content */
+    .main-grid {
+        margin-left: 200px; /* 180px sidebar + 20px espaço */
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        display: none; /* esconde a sidebar no mobile */
+    }
+
+    /* Precisamos ajustar o .main-grid, não o .main-content */
+    .main-grid {
+        margin-left: 0;
+    }
+}
+
+/* ... (Estilos de .post-header, .delete-btn, etc. mantidos como antes) ... */
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #ff0000;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 2;
+    transition: color 0.2s;
+}
+.delete-btn:hover {
+    color: #914037; 
+}
+
+/*NOME DE USUÁRIO DENTRO DO POST*/
+.card.post {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #222;
+    font-size: 14px;
+}
+
+.post-content p {
+    margin: 8px 0;
+    color: #333;
+    font-size: 15px;
+}
+

@@ -1,0 +1,74 @@
+/*
+ * ============================================
+ * Estilos da Página de Perfil (profile.css)
+ * ============================================
+*/
+
+/* Define o card de perfil (fundo branco, etc) */
+.profile-card {
+    padding: 25px;
+    text-align: center;
+}
+
+/* * A <label> que envolve o avatar e o botão.
+ * Fazemos ela ter um cursor de "ponteiro" para 
+ * indicar que é clicável.
+*/
+.avatar-upload-label {
+    cursor: pointer;
+    display: block; /* Faz a label se comportar como um bloco */
+    max-width: 150px; /* Limita a largura do container */
+    margin: 0 auto 15px auto; /* Centraliza a label */
+}
+
+/* O avatar grande (imagem de perfil) */
+.profile-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px; /* Espaço entre a foto e o botão */
+    border: 3px solid #f0f0f0;
+    display: block; /* Garante que 'margin: auto' funcione */
+    margin-left: auto;
+    margin-right: auto;
+
+    /* Adiciona uma transição suave ao passar o mouse */
+    transition: filter 0.2s;
+}
+
+/* Escurece a foto ao passar o mouse, indicando ação */
+.avatar-upload-label:hover .profile-avatar-large {
+    filter: brightness(0.9);
+}
+
+/* O botão "Editar Foto" */
+.btn-secondary {
+    background-color: transparent; /* Cor de fundo mais clara */
+    color: #0b1220; /* Texto escuro */
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: normal;
+    border: 1px solid #bdbdbd; /* Borda sutil */
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    margin-top: 10px; /* Espaço acima do botão */
+}
+
+.btn-secondary:hover {
+    background-color: #ffffff;
+    border-color: #676565;
+}
+
+/* Estilos para o nome do usuário, etc. */
+.profile-card h1 {
+    font-size: 28px;
+    margin: 10px 0;
+}
+
+.profile-card h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
