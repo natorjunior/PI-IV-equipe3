@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  mysql: # mysql -> 172.20.0.2
+    image: mysql:8.0
+    container_name: peneirada-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: peneirada
+      MYSQL_USER: peneirauser
+      MYSQL_PASSWORD: peneira123
+      TZ: America/Fortaleza
+      LANG: C.UTF-8
+    ports:
+      - "1520:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./infra/sql:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api_php:
+    build:
+      context: ./api_php
+      dockerfile: Dockerfile
+    container_name: peneirada-api-php
+    restart: unless-stopped
+    volumes:
+      - ./api_php:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=peneirauser
+      - DB_PASSWORD=peneira123
+      - DB_DATABASE=peneirada
+    ports:
+      - "1521:80"
+    depends_on:
+      - mysql
+    networks:
+      - default
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: peneirada-phpmyadmin
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=peneirauser
+      - PMA_PASSWORD=peneira123
+      - PMA_ARBITRARY=1
+    ports:
+      - "1522:80"
+    depends_on:
+      - mysql
+    networks:
+      - default
+volumes:
+  mysql_data:

@@ -1,0 +1,261 @@
+/* ======= RESET BÁSICO ======= */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* ======= HEADER SUPERIOR ======= */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3AD8C5;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.search-input {
+  width: 300px;
+  padding: 6px;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* Perfil do usuário no header */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.user-handle {
+  font-size: 12px;
+  color: #555;
+}
+
+/* Dropdown escondido */
+.dropdown {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 150px;
+  z-index: 100;
+}
+
+.dropdown a {
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown a:hover {
+  background: #eee;
+}
+
+/* Botões engrenagem e sino */
+.icon-button {
+  background: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.icon-button i {
+  font-size: 18px;
+}
+
+/* ======= SIDEBAR LATERAL ======= */
+.sidebar {
+  width: 220px;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  height: 100vh;
+  position: fixed;
+  top: 60px; /* abaixo do header fixo */
+  left: 0;
+  overflow-y: auto;
+}
+
+.user-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-box .avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.user-box h3 {
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.menu-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #e74c3c;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background: #f0f0f0;
+}
+
+.menu-item i {
+  width: 20px;
+  text-align: center;
+}
+
+.logout {
+  color: #e74c3c;
+}
+
+.logout:hover {
+  background: #fceaea;
+}
+
+/* ======= CONTEÚDO PRINCIPAL ======= */
+.main-content {
+  margin-top: 60px;         /* altura do header fixo */
+  margin-left: 220px;       /* largura da sidebar */
+  padding: 20px;
+}
+
+/* ======= RESPONSIVIDADE ======= */
+@media (max-width: 768px) {
+  .search-input {
+    width: 150px;
+  }
+
+  .user-info {
+    display: none; /* esconder texto do perfil no header */
+  }
+
+  .sidebar {
+    width: 180px;
+  }
+
+  .main-content {
+    margin-left: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    display: none; /* esconde a sidebar no mobile */
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* MEIO TOP */
+/* Caixa principal da postagem */
+.post-box {
+  width: 90%; /* Largura da caixa em relação à tela */
+  max-width: 600px; /* Largura máxima da caixa */
+  margin: auto; /* Centraliza horizontalmente na página */
+  padding: 20px; /* Espaçamento interno entre conteúdo e borda */
+  border: 1px solid #ccc; /* Borda cinza clara ao redor da caixa */
+  border-radius: 8px; /* Bordas arredondadas */
+  background: #fff; /* Fundo branco */
+  display: flex; /* Define que os elementos internos serão flexíveis */
+  flex-direction: column; /* Organiza os elementos verticalmente */
+  align-items: center; /* Centraliza horizontalmente os elementos dentro da box */
+  gap: 10px; /* Espaçamento vertical entre os elementos filhos */
+}
+
+/* Container das opções (curtir, comentar, compartilhar) */
+.post-options {
+  display: flex; /* Exibe os botões em linha */
+  justify-content: space-around; /* Distribui os botões com espaço igual entre eles */
+  width: 100%; /* Ocupa toda a largura da caixa */
+}
+
+/* Estilo dos botões de ação */
+.option {
+  background: none; /* Remove o fundo padrão do botão */
+  border: none; /* Remove a borda padrão */
+  font-size: 15px; /* Tamanho da fonte */
+  cursor: pointer; /* Mostra o cursor de mão ao passar por cima */
+  color: #555; /* Cor do texto cinza escuro */
+}
+
+/* Estilo do ícone dentro do botão */
+.option i {
+  margin-right: 10px; /* Espaço entre o ícone e o texto do botão */
+}
+
+/* Campo de texto para escrever a postagem */
+.post-input {
+  width: 100%; /* Ocupa toda a largura da caixa (respeitando padding da box) */
+  height: 20px; /* Altura do campo de texto */
+  padding: 4px; /* Espaçamento interno do texto em relação à borda */
+  font-size: 15px; /* Tamanho da fonte do texto */
+  border: 1px solid #ddd; /* Borda clara do input */
+  border-radius: 5px; /* Bordas arredondadas do input */
+  resize: none; /* Impede que o usuário redimensione o textarea */
+  background-color: #d7faf6; /* Cor de fundo azul clarinho */
+}
+

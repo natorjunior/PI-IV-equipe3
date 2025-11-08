@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background: #4CD5C5; 
+  margin: 0;
+  color: #0b1220;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+/* Logo */
+.brand img {
+  height: 50px; /* ajuste o tamanho do logo aqui */
+}
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 18px;
+}
+.topbar {
+  backdrop-filter: blur(6px);
+  position: sticky;
+  top: 0;
+  border-bottom: none;
+  z-index: 10;
+}
+.topbar .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaçamento entre os botões */
+}
+.menu a {
+  /* margin-left: 12px; (Removido, 'gap' substitui) */
+  /* color: rgb(12, 170, 255); (Removido) */
+  
+  /* Estilos copiados do .btn */
+  display: inline-block;
+  background-color: #0b1220; /* Cor escura */
+  color: #ffffff;
+  padding: 10px 18px; /* Um pouco menor para o header */
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 700; /* 'font-weight: bold' é 700 */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Adiciona um hover para os novos botões do header */
+.menu a:hover {
+  background-color: #333;
+}
+/* ============================================ */
+/* FIM DAS MUDANÇAS */
+/* ============================================ */
+
+.card {
+  background: white;
+  border-radius: 7px;
+  padding: 30px 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  text-align: center;
+  max-width: 550px;
+  width: 100%;
+}
