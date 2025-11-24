@@ -1,74 +1,312 @@
-/*
- * ============================================
- * Estilos da Página de Perfil (profile.css)
- * ============================================
-*/
+/* =========================================
+   NOVO LAYOUT DE PERFIL (ESTILO MODERNO)
+   ========================================= */
 
-/* Define o card de perfil (fundo branco, etc) */
-.profile-card {
-    padding: 25px;
-    text-align: center;
+/* Ajuste na área principal para remover paddings padrão se houver */
+.profile-content-area {
+    padding: 0;
+    background-color: transparent; /* Remove fundo branco padrão da section.feed */
+    box-shadow: none; /* Remove sombra padrão */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaço entre os cards */
 }
 
-/* * A <label> que envolve o avatar e o botão.
- * Fazemos ela ter um cursor de "ponteiro" para 
- * indicar que é clicável.
-*/
-.avatar-upload-label {
-    cursor: pointer;
-    display: block; /* Faz a label se comportar como um bloco */
-    max-width: 150px; /* Limita a largura do container */
-    margin: 0 auto 15px auto; /* Centraliza a label */
+/* --- 1. Banner --- */
+.profile-banner {
+    height: 250px; /* Altura do banner */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px; /* Bordas arredondadas no banner também */
+    position: relative;
+    margin-bottom: -60px; /* Margem negativa crucial para a sobreposição da foto */
+    z-index: 1;
 }
 
-/* O avatar grande (imagem de perfil) */
-.profile-avatar-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 5px; /* Espaço entre a foto e o botão */
-    border: 3px solid #f0f0f0;
-    display: block; /* Garante que 'margin: auto' funcione */
-    margin-left: auto;
-    margin-right: auto;
-
-    /* Adiciona uma transição suave ao passar o mouse */
-    transition: filter 0.2s;
+.banner-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
 }
 
-/* Escurece a foto ao passar o mouse, indicando ação */
-.avatar-upload-label:hover .profile-avatar-large {
-    filter: brightness(0.9);
-}
-
-/* O botão "Editar Foto" */
-.btn-secondary {
-    background-color: transparent; /* Cor de fundo mais clara */
-    color: #0b1220; /* Texto escuro */
-    font-size: 14px;
+.btn-banner, .btn-banner-icon {
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro transparente */
+    color: white;
+    border: none;
     padding: 8px 15px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: normal;
-    border: 1px solid #bdbdbd; /* Borda sutil */
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-    margin-top: 10px; /* Espaço acima do botão */
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.btn-secondary:hover {
-    background-color: #ffffff;
-    border-color: #676565;
+.btn-banner-icon {
+    padding: 8px 12px;
 }
 
-/* Estilos para o nome do usuário, etc. */
-.profile-card h1 {
-    font-size: 28px;
-    margin: 10px 0;
+/* --- 2. Cards Estilizados (Base) --- */
+.card.profile-header-card,.card.profile-about-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 30px;
+    position: relative;
+    z-index: 2; /* Garante que fique acima do banner */
+    margin-bottom: 20px; /* Ajuste esse valor se quiser menos espaço */
 }
 
-.profile-card h2 {
+/* --- 3. Header Card (Flexbox para Foto e Info) --- */
+.profile-header-flex {
+    display: flex;
+    align-items: flex-end; /* Alinha os itens na parte de baixo */
+    gap: 30px;
+}
+
+/* Container da Foto e Sombra */
+.avatar-container-styled {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0; /* Impede que a foto diminua */
+}
+/* A foto propriamente dita */
+.profile-avatar-styled {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 5px solid white; /* Borda branca grossa */
+    position: relative;
+    z-index: 2;
+    background: white;
+}
+/* Cursor para indicar que pode clicar para editar */
+.clickable-avatar {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+}
+
+
+/* --- 4. Detalhes do Usuário (Lado Direito) --- */
+.user-details-styled {
+    flex-grow: 1;
+    padding-bottom: 10px;
+}
+
+.user-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.user-title-row h1 {
+    margin: 0;
     font-size: 24px;
-    margin: 10px 0;
+    color: #333;
+}
+
+.user-location {
+    color: #00cba9; /* Cor do tema */
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-bio {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.profile-action-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-teal {
+    background-color: #4fd1c5; /* Cor teal do exemplo */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-grow: 1; /* Botões ocupam espaço igual */
+    max-width: 200px;
+}
+
+.btn-teal:hover {
+    background-color: #3ebdb2;
+}
+
+/* --- 5. Card "Sobre" --- */
+.profile-about-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.profile-about-card p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* --- Responsividade Básica --- */
+@media (max-width: 768px) {
+    .profile-header-flex {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .profile-banner {
+        height: 150px;
+        margin-bottom: -40px;
+    }
+    
+    .avatar-container-styled {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .user-title-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .profile-action-buttons {
+        justify-content: center;
+    }
+}
+
+
+/* Estilos do Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+}
+.close-modal { font-size: 28px; cursor: pointer; font-weight: bold; }
+.form-group { margin-bottom: 15px; text-align: left; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+.form-group input[type="text"], .form-group textarea {
+    width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;
+}
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-save { background: #4fd1c5; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+.btn-cancel { background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+
+/* =================================================
+   ESTILOS DO MODAL DE CONEXÕES (AMIGOS)
+   ================================================= */
+
+/* Container da lista com rolagem */
+.friends-list-box {
+    max-height: 400px;       /* Altura máxima da lista antes de rolar */
+    overflow-y: auto;        /* Barra de rolagem se passar da altura */
+    padding: 10px;
+}
+
+/* Cada item da lista (O amigo) */
+.friend-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+    transition: background 0.2s;
+}
+
+.friend-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* O Link que envolve a foto e o nome */
+.friend-link {
+    display: flex;           /* Coloca foto e texto lado a lado */
+    align-items: center;     /* Centraliza verticalmente */
+    gap: 15px;               /* Espaço entre a foto e o nome */
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+/* --- A CORREÇÃO DA IMAGEM GIGANTE --- */
+.friend-item img {
+    width: 50px !important;  /* Força a largura fixa */
+    height: 50px !important; /* Força a altura fixa */
+    border-radius: 50%;      /* Faz ficar redonda */
+    object-fit: cover;       /* Corta a imagem para não esticar/achatatar */
+    flex-shrink: 0;          /* Impede que a imagem seja esmagada */
+    border: 2px solid #eee;  /* Borda sutil */
+}
+
+/* Estilos do Nome e Bio */
+.friend-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.friend-info span {
+    font-size: 13px;
+    color: #777;
+}
+
+/* Botão de Upload Personalizado (Tamanho Ajustado) */
+.custom-file-upload {
+    display: flex;
+    background-color: #000000;
+    color: #ffffff;
+    
+    /* MESMAS MEDIDAS DO BOTÃO SALVAR: */
+    padding: 10px 10px;
+    border-radius: 6px;
+    font-size: 14px; /* Tamanho padrão de botão */
+    
+    cursor: pointer;
+    font-weight: normal; /* Ou bold, se preferir */
+    border: 1px solid #000000;
+    transition: all 0.2s;
+    vertical-align: middle;
+}
+
+.custom-file-upload:hover {
+    background-color: #d8dadf;
+    border-color: #bbb;
+}
+
+.custom-file-upload i {
+    margin-right: 5px;
+    color: #555;
 }
