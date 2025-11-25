@@ -5,10 +5,10 @@ services:
     container_name: peneirada-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
       MYSQL_DATABASE: peneirada
       MYSQL_USER: peneirauser
-      MYSQL_PASSWORD: peneira123
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-peneira123}
       TZ: America/Fortaleza
       LANG: C.UTF-8
     ports:
@@ -34,7 +34,7 @@ services:
     environment:
       - DB_HOST=mysql
       - DB_USER=peneirauser
-      - DB_PASSWORD=peneira123
+      - DB_PASSWORD=${MYSQL_PASSWORD:-peneira123}
       - DB_DATABASE=peneirada
     ports:
       - "1521:80"
@@ -43,20 +43,22 @@ services:
     networks:
       - default
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: peneirada-phpmyadmin
-    restart: unless-stopped
-    environment:
-      - PMA_HOST=mysql
-      - PMA_USER=peneirauser
-      - PMA_PASSWORD=peneira123
-      - PMA_ARBITRARY=1
-    ports:
-      - "1522:80"
-    depends_on:
-      - mysql
-    networks:
-      - default
+  # PHPMyAdmin - COMENTADO POR SEGURANÇA
+  # Para usar, descomente e acesse apenas via localhost
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: peneirada-phpmyadmin
+  #   restart: unless-stopped
+  #   environment:
+  #     - PMA_HOST=mysql
+  #     - PMA_USER=peneirauser
+  #     - PMA_PASSWORD=${MYSQL_PASSWORD:-peneira123}
+  #     - PMA_ARBITRARY=0
+  #   ports:
+  #     - "127.0.0.1:1522:80"  # Apenas localhost
+  #   depends_on:
+  #     - mysql
+  #   networks:
+  #     - default
 volumes:
   mysql_data:

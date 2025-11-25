@@ -217,37 +217,45 @@ if ($action === 'list_posts') {
     // Verifica se foi pedido o feed de um usuário específico
     $filter_user_id = $_POST['user_id'] ?? null; 
 
-    // Começo da Query
-    $sql = "
-        SELECT 
-            p.id, p.user_id, p.content, p.image, p.created_at, 
-            u.nome, u.avatar,
-            (SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = p.user_id) as is_friend
-        FROM posts p
-        JOIN usuarios u ON p.user_id = u.id
-    ";
-
-    $params = [$my_id];
-
-    // Se tiver filtro de usuário, adiciona o WHERE
+    // Query simplificada primeiro para testar
     if ($filter_user_id) {
-        $sql .= " WHERE p.user_id = ? ";
-        $params[] = $filter_user_id;
+        $sql = "SELECT p.id, p.user_id, p.content, p.image, p.created_at, 
+                       u.nome, u.avatar,
+                       COALESCE((SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = p.user_id), 0) as is_friend,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id), 0) as like_count,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?), 0) as user_liked
+                FROM posts p 
+                JOIN usuarios u ON p.user_id = u.id 
+                WHERE p.user_id = ?
+                ORDER BY p.created_at DESC LIMIT 100";
+        $params = [$my_id, $my_id, $filter_user_id];
+    } else {
+        $sql = "SELECT p.id, p.user_id, p.content, p.image, p.created_at, 
+                       u.nome, u.avatar,
+                       COALESCE((SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = p.user_id), 0) as is_friend,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id), 0) as like_count,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?), 0) as user_liked
+                FROM posts p 
+                JOIN usuarios u ON p.user_id = u.id 
+                ORDER BY p.created_at DESC LIMIT 100";
+        $params = [$my_id, $my_id];
     }
 
-    $sql .= " ORDER BY p.created_at DESC LIMIT 100";
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($posts as &$p) {
+            if ($p['image']) $p['image'] = '../' . $p['image'];
+            if ($p['avatar']) $p['avatar'] = '../' . $p['avatar'];
+            else $p['avatar'] = '../imagens/default_avatar.png';
+        }
 
-    foreach ($posts as &$p) {
-        if ($p['image']) $p['image'] = '../' . $p['image'];
-        if ($p['avatar']) $p['avatar'] = '../' . $p['avatar'];
-        else $p['avatar'] = '../imagens/default_avatar.png';
+        send_json('ok', '', ['posts' => $posts]);
+    } catch (Exception $e) {
+        send_json('error', 'Erro SQL: ' . $e->getMessage());
     }
-
-    send_json('ok', '', ['posts' => $posts]);
 }
 
 // ============================================================

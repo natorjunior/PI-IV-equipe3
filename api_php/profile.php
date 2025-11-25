@@ -424,6 +424,12 @@ if ($isOwnProfile) {
                             deleteBtn = `<button class="delete-btn" onclick="deleteProfilePost(${p.id})" style="float:right; border:none; background:none; cursor:pointer; font-size:20px; color:#aaa;">&times;</button>`;
                         }
 
+                        // Sistema de curtidas
+                        const isLiked = p.user_liked > 0;
+                        const likeCount = p.like_count || 0;
+                        const likeClass = isLiked ? 'liked' : '';
+                        const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+
                         div.innerHTML = `
                             <div class="post-header" style="display:flex; justify-content:space-between; margin-bottom:10px;">
                                 <div style="display:flex; align-items:center; gap:10px;">
@@ -437,6 +443,11 @@ if ($isOwnProfile) {
                             </div>
                             <p>${p.content}</p>
                             ${imgHtml}
+                            <div class="post-actions">
+                                <button class="like-btn ${likeClass}" data-postid="${p.id}">
+                                    <i class="${likeIcon}"></i> <span class="like-count">${likeCount}</span>
+                                </button>
+                            </div>
                         `;
                         profilePostsContainer.appendChild(div);
                     });
@@ -462,6 +473,48 @@ if ($isOwnProfile) {
             } else {
                 alert(j.msg);
             }
+        }
+
+        // Event listener para curtidas nos posts do perfil
+        if (profilePostsContainer) {
+            profilePostsContainer.addEventListener('click', async function(e) {
+                if (e.target && (e.target.classList.contains('like-btn') || e.target.closest('.like-btn'))) {
+                    const likeBtn = e.target.classList.contains('like-btn') ? e.target : e.target.closest('.like-btn');
+                    const postId = likeBtn.getAttribute('data-postid');
+                    
+                    likeBtn.disabled = true;
+                    
+                    const fd = new FormData();
+                    fd.append('post_id', postId);
+                    
+                    try {
+                        const res = await fetch('api.php?action=toggle_like', { method: 'POST', body: fd });
+                        const j = await res.json();
+                        
+                        if (j.status === 'ok') {
+                            const icon = likeBtn.querySelector('i');
+                            const countSpan = likeBtn.querySelector('.like-count');
+                            
+                            if (j.liked) {
+                                likeBtn.classList.add('liked');
+                                icon.className = 'fa-solid fa-heart';
+                            } else {
+                                likeBtn.classList.remove('liked');
+                                icon.className = 'fa-regular fa-heart';
+                            }
+                            
+                            countSpan.textContent = j.count;
+                        } else {
+                            alert(j.msg);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao curtir post:', error);
+                        alert('Erro ao conectar com o servidor.');
+                    } finally {
+                        likeBtn.disabled = false;
+                    }
+                }
+            });
         }
 
         // Chama a função ao carregar a página

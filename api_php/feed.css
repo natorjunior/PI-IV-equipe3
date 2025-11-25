@@ -452,3 +452,51 @@ body {
     color: white;
 }
 
+/* ======= SISTEMA DE CURTIDAS ======= */
+.post-actions {
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.like-btn:hover {
+    background: #f8f9fa;
+    color: #e74c3c;
+}
+
+.like-btn.liked {
+    color: #e74c3c;
+}
+
+.like-btn.liked:hover {
+    background: #ffeaea;
+}
+
+.like-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.like-count {
+    font-weight: 500;
+    min-width: 20px;
+    text-align: left;
+}
+

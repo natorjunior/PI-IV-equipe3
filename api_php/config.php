@@ -1,9 +1,9 @@
 <?php
-// config.php - ajuste as credenciais se necessário
-$DB_HOST = 'mysql';
-$DB_NAME = 'peneirada';
-$DB_USER = 'peneirauser';
-$DB_PASS = 'peneira123';
+// config.php - usando variáveis de ambiente
+$DB_HOST = $_ENV['DB_HOST'] ?? 'mysql';
+$DB_NAME = $_ENV['DB_DATABASE'] ?? 'peneirada';
+$DB_USER = $_ENV['DB_USER'] ?? 'peneirauser';
+$DB_PASS = $_ENV['DB_PASSWORD'] ?? 'peneira123';
 
 try {
     $pdo = new PDO("mysql:host={$DB_HOST};dbname={$DB_NAME};charset=utf8mb4", $DB_USER, $DB_PASS, [
