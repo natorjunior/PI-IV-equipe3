@@ -208,6 +208,12 @@ if (empty($_SESSION['user_id'])) {
                         const avatar = p.avatar ? `<img src="${p.avatar}" class="small-avatar">` : '<div class="small-avatar placeholder"></div>';
                         const imgHtml = p.image ? `<div class="post-image"><img src="${p.image}"></div>` : '';
 
+                        // 3. Botão de Curtida
+                        const isLiked = p.user_liked > 0;
+                        const likeCount = p.like_count || 0;
+                        const likeClass = isLiked ? 'liked' : '';
+                        const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                        
                         div.innerHTML = `
                             <div class="post-header">
                                 <div class="post-header-left">
@@ -218,6 +224,11 @@ if (empty($_SESSION['user_id'])) {
                             <div class="post-content">
                                 <p>${escapeHtml(p.content)}</p>
                                 ${imgHtml}
+                            </div>
+                            <div class="post-actions">
+                                <button class="like-btn ${likeClass}" data-postid="${p.id}">
+                                    <i class="${likeIcon}"></i> <span class="like-count">${likeCount}</span>
+                                </button>
                             </div>`;
                         
                         postsContainer.appendChild(div);
@@ -300,6 +311,7 @@ if (empty($_SESSION['user_id'])) {
 
         if (postsContainer) {
             postsContainer.addEventListener('click', async function(e) {
+                // Handle delete button
                 if (e.target && e.target.classList.contains('delete-btn')) {
                     if (!confirm('Tem certeza que deseja excluir este post?')) return;
                     const postId = e.target.getAttribute('data-postid');
@@ -313,6 +325,47 @@ if (empty($_SESSION['user_id'])) {
                     } catch (error) {
                         console.error('Erro ao deletar post:', error);
                         alert('Erro ao conectar com o servidor.');
+                    }
+                }
+                
+                // Handle like button
+                if (e.target && (e.target.classList.contains('like-btn') || e.target.closest('.like-btn'))) {
+                    const likeBtn = e.target.classList.contains('like-btn') ? e.target : e.target.closest('.like-btn');
+                    const postId = likeBtn.getAttribute('data-postid');
+                    
+                    // Desabilita o botão temporariamente
+                    likeBtn.disabled = true;
+                    
+                    const fd = new FormData();
+                    fd.append('post_id', postId);
+                    
+                    try {
+                        const res = await fetch('api.php?action=toggle_like', { method: 'POST', body: fd });
+                        const j = await res.json();
+                        
+                        if (j.status === 'ok') {
+                            const icon = likeBtn.querySelector('i');
+                            const countSpan = likeBtn.querySelector('.like-count');
+                            
+                            // Atualiza o visual do botão
+                            if (j.liked) {
+                                likeBtn.classList.add('liked');
+                                icon.className = 'fa-solid fa-heart';
+                            } else {
+                                likeBtn.classList.remove('liked');
+                                icon.className = 'fa-regular fa-heart';
+                            }
+                            
+                            // Atualiza o contador
+                            countSpan.textContent = j.count;
+                        } else {
+                            alert(j.msg);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao curtir post:', error);
+                        alert('Erro ao conectar com o servidor.');
+                    } finally {
+                        likeBtn.disabled = false;
                     }
                 }
             });

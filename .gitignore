@@ -1,1 +1,10 @@
 API/node_modules
+
+# Arquivo de ambiente (não versionar)
+.env
+
+# Pasta API Node.js legada (não utilizada)
+API/
+
+# Mockups e protótipos antigos (não utilizados)
+front-end-mockup/
