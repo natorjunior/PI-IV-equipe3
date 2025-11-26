@@ -53,7 +53,7 @@ services:
       # - PMA_PASSWORD=${MYSQL_PASSWORD:-peneira123}
       - PMA_ARBITRARY=0
     ports:
-      - "1532:80"
+      - "1522:80"
     depends_on:
       - mysql
     networks:
