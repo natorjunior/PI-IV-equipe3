@@ -241,12 +241,39 @@ body {
     padding-top: 15px;
     margin-top: 5px;
 }
+/* =========================================
+   PADRONIZAÇÃO DE IMAGENS DOS POSTS
+   ========================================= */
+
+/* 1. O Container da Imagem */
+.post-image {
+    width: 100%;          /* Ocupa 100% da largura do card */
+    height: 400px;        /* AL TURA FIXA: Define o padrão vertical */
+    margin-top: 15px;     /* Espaço entre o texto e a imagem */
+    background-color: #000; /* Fundo preto (bom para imagens que não carregam) */
+    border-radius: 8px;   /* Bordas arredondadas */
+    overflow: hidden;     /* Garante que nada saia para fora do container */
+    
+    /* Centraliza o conteúdo (caso a imagem seja menor que o container) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. A Imagem em si */
 .post-image img {
-    max-width: 100%; /* A imagem nunca será mais larga que o card */
-    height: auto;    /* A altura se ajusta automaticamente */
+    width: 100%;
+    height: 100%;
+    
+    /* --- A MÁGICA ACONTECE AQUI --- */
+    object-fit: cover; 
+    /* cover: Faz a imagem preencher todo o espaço. 
+       Se a imagem for muito larga, corta as laterais.
+       Se for muito alta, corta o topo/base.
+       NUNCA estica ou deforma a imagem.
+    */
+    
     display: block;
-    border-radius: 8px;
-    margin-top: 15px;
 }
 .option-label {
     display: flex;
@@ -374,7 +401,15 @@ body {
     margin-bottom: 8px;
 }
 
+.post-header-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .user-name {
+    margin: 0;
+    white-space: nowrap;
     font-weight: 600;
     color: #222;
     font-size: 14px;
@@ -384,5 +419,84 @@ body {
     margin: 8px 0;
     color: #333;
     font-size: 15px;
+}
+
+
+/* Botão Padrão (Adicionar) */
+.btn-friend {
+    background: none;
+    border: 1px solid #3AD8C5;
+    color: #3AD8C5;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-friend:hover {
+    background: #3AD8C5;
+    color: white;
+}
+
+/* Botão Remover (Vermelho) */
+.btn-friend.remove {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+.btn-friend.remove:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* ======= SISTEMA DE CURTIDAS ======= */
+.post-actions {
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.like-btn:hover {
+    background: #f8f9fa;
+    color: #e74c3c;
+}
+
+.like-btn.liked {
+    color: #e74c3c;
+}
+
+.like-btn.liked:hover {
+    background: #ffeaea;
+}
+
+.like-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.like-count {
+    font-weight: 500;
+    min-width: 20px;
+    text-align: left;
 }
 

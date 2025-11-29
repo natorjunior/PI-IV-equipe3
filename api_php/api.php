@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require 'config.php';
 header('Content-Type: application/json; charset=utf-8');
 session_start();
@@ -23,8 +24,11 @@ if (!empty($_SESSION['user_id'])) {
 // ============================================================
 // 🧩 Funções auxiliares
 // ============================================================
-function send_json($status, $msg, $extra = []) {
-    echo json_encode(array_merge(['status' => $status, 'msg' => $msg], $extra));
+function send_json($status, $msg, $data = []) {
+    // Limpa qualquer texto (warnings, errors, espaços em branco) que o PHP tenha gerado antes
+    ob_clean(); 
+    
+    echo json_encode(array_merge(['status' => $status, 'msg' => $msg], $data));
     exit;
 }
 
@@ -79,7 +83,7 @@ if ($action === 'register') {
 }
 
 // ============================================================
-// 🔑 LOGIN
+// 🔑 LOGIN (CORRIGIDO PARA CARREGAR BIO E CAPA)
 // ============================================================
 if ($action === 'login') {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -89,15 +93,34 @@ if ($action === 'login') {
 
     if (!$email || !$password) send_json('error', 'Informe email e senha.');
 
-    $stmt = $pdo->prepare('SELECT id, nome, senha, avatar FROM usuarios WHERE email = ? LIMIT 1');
+    // Seleciona TUDO (*) da tabela usuarios para garantir que pegamos bio, capa, etc.
+    $stmt = $pdo->prepare('SELECT * FROM usuarios WHERE email = ? LIMIT 1');
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['senha'])) {
-        session_regenerate_id(true); // 🔐 previne session fixation
+        session_regenerate_id(true); // Segurança
+        
+        // Dados Básicos
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['nome'];
         $_SESSION['user_avatar'] = $user['avatar'];
+
+        // --- A CORREÇÃO ESTÁ AQUI ---
+        // Precisamos colocar os novos campos na sessão também!
+        
+        // Carrega a BIO (se não existir no banco, deixa vazio)
+        $_SESSION['user_bio'] = $user['bio'] ?? '';
+        
+        // Carrega a LOCALIZAÇÃO
+        $_SESSION['user_localizacao'] = $user['localizacao'] ?? '';
+        
+        // Carrega a CAPA (se existir, não esqueça de manter o padrão do caminho)
+        // Nota: Se no banco já está salvo como "imagens/capa.jpg", aqui está ok.
+        $_SESSION['user_capa'] = !empty($user['capa']) ? $user['capa'] : null;
+        // -----------------------------
+        $_SESSION['user_sobre'] = $user['sobre'] ?? '';
+
         send_json('ok', 'Login bem-sucedido.');
     }
 
@@ -185,28 +208,54 @@ if ($action === 'create_post') {
     exit;
 }
 
-/* Posteriormente tem que ser ajustado a função de listar
-posts, pois do jeito que está ele não identifica quem fez a publicação*/
 // ============================================================
-// 📰 LISTAR POSTS (exibe apenas nome do usuário + conteúdo + imagem)
+// LISTAR POSTS (Global ou Por Usuário)
 // ============================================================
 if ($action === 'list_posts') {
-    $stmt = $pdo->query('
-	SELECT p.id, p.user_id, p.content, p.image,u.avatar, u.nome AS user_name
-        FROM posts p
-        JOIN usuarios u ON p.user_id = u.id
-        ORDER BY p.created_at DESC
-        LIMIT 100
-    ');
-    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $my_id = $_SESSION['user_id'] ?? 0;
+    
+    // Verifica se foi pedido o feed de um usuário específico
+    $filter_user_id = $_POST['user_id'] ?? null; 
 
-    #foreach ($posts as &$p) {
-    #    if (empty($p['image'])) $p['image'] = null;
-    #}
-    unset($p);
+    // Query simplificada primeiro para testar
+    if ($filter_user_id) {
+        $sql = "SELECT p.id, p.user_id, p.content, p.image, p.created_at, 
+                       u.nome, u.avatar,
+                       COALESCE((SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = p.user_id), 0) as is_friend,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id), 0) as like_count,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?), 0) as user_liked
+                FROM posts p 
+                JOIN usuarios u ON p.user_id = u.id 
+                WHERE p.user_id = ?
+                ORDER BY p.created_at DESC LIMIT 100";
+        $params = [$my_id, $my_id, $filter_user_id];
+    } else {
+        $sql = "SELECT p.id, p.user_id, p.content, p.image, p.created_at, 
+                       u.nome, u.avatar,
+                       COALESCE((SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = p.user_id), 0) as is_friend,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id), 0) as like_count,
+                       COALESCE((SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?), 0) as user_liked
+                FROM posts p 
+                JOIN usuarios u ON p.user_id = u.id 
+                ORDER BY p.created_at DESC LIMIT 100";
+        $params = [$my_id, $my_id];
+    }
 
-    echo json_encode(['status' => 'ok', 'posts' => $posts]);
-    exit;
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($posts as &$p) {
+            if ($p['image']) $p['image'] = '../' . $p['image'];
+            if ($p['avatar']) $p['avatar'] = '../' . $p['avatar'];
+            else $p['avatar'] = '../imagens/default_avatar.png';
+        }
+
+        send_json('ok', '', ['posts' => $posts]);
+    } catch (Exception $e) {
+        send_json('error', 'Erro SQL: ' . $e->getMessage());
+    }
 }
 
 // ============================================================
@@ -227,7 +276,37 @@ if ($action === 'delete_post') {
         send_json('error', 'Falha ao excluir o post ou permissão negada.');
     }
 }
+// ============================================================
+// 🔍 BUSCAR USUÁRIOS
+// ============================================================
+if ($action === 'search_users') {
+    $term = $_POST['term'] ?? '';
+    $my_id = $_SESSION['user_id'] ?? 0;
 
+    if (strlen($term) < 1) send_json('error', 'Digite algo para buscar.');
+
+    // Busca usuários onde o nome parece com o termo (LIKE)
+    // Também verifica se já é amigo (is_friend)
+    $sql = "
+        SELECT 
+            id, nome, avatar, bio, localizacao,
+            (SELECT COUNT(*) FROM amizades WHERE usuario_id = ? AND amigo_id = usuarios.id) as is_friend
+        FROM usuarios 
+        WHERE nome LIKE ? AND id != ?
+        LIMIT 20
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$my_id, "%$term%", $my_id]);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Arruma os caminhos das imagens
+    foreach ($users as &$u) {
+        $u['avatar'] = $u['avatar'] ? '../' . $u['avatar'] : '../imagens/default_avatar.png';
+    }
+
+    send_json('ok', '', ['users' => $users]);
+}
 // ============================================================
 // 🖼️ ATUALIZAR AVATAR
 // ============================================================
@@ -244,12 +323,174 @@ if ($action === 'update_avatar') {
     send_json('ok', 'Foto de perfil atualizada com sucesso!', ['avatar' => $avatarPath]);
 }
 
+
+// ============================================================
+//  ADICIONAR AMIGO
+// ============================================================
+if ($action === 'add_friend') {
+    if (empty($_SESSION['user_id'])) send_json('error', 'Não autenticado.');
+    $amigo_id = (int)($_POST['amigo_id'] ?? 0);
+    $usuario_id = $_SESSION['user_id'];
+
+    if ($amigo_id === $usuario_id) send_json('error', 'Ação inválida.');
+
+    // Verifica se já existe para não duplicar erro
+    $stmt = $pdo->prepare('SELECT id FROM amizades WHERE usuario_id = ? AND amigo_id = ?');
+    $stmt->execute([$usuario_id, $amigo_id]);
+    if (!$stmt->fetch()) {
+        $stmt = $pdo->prepare('INSERT INTO amizades (usuario_id, amigo_id, created_at) VALUES (?, ?, NOW())');
+        $stmt->execute([$usuario_id, $amigo_id]);
+    }
+    send_json('ok', 'Amigo adicionado!');
+}
+
+// ============================================================
+//  REMOVER AMIGO
+// ============================================================
+if ($action === 'remove_friend') {
+    if (empty($_SESSION['user_id'])) send_json('error', 'Não autenticado.');
+    $amigo_id = (int)($_POST['amigo_id'] ?? 0);
+    $usuario_id = $_SESSION['user_id'];
+
+    $stmt = $pdo->prepare('DELETE FROM amizades WHERE usuario_id = ? AND amigo_id = ?');
+    $stmt->execute([$usuario_id, $amigo_id]);
+
+    send_json('ok', 'Amigo removido.');
+}
+
+// ============================================================
+// 👥 LISTAR AMIGOS (CONEXÕES)
+// ============================================================
+if ($action === 'list_friends') {
+    // Se um ID for passado, lista os amigos desse ID. Se não, lista os do usuário logado.
+    $target_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : $_SESSION['user_id'];
+
+    // Busca os dados dos usuários que o target_id adicionou
+    $stmt = $pdo->prepare('
+        SELECT u.id, u.nome, u.avatar, u.bio 
+        FROM amizades a
+        JOIN usuarios u ON a.amigo_id = u.id
+        WHERE a.usuario_id = ?
+        ORDER BY a.created_at DESC
+    ');
+    $stmt->execute([$target_id]);
+    $amigos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Ajusta caminhos das imagens
+    foreach ($amigos as &$amigo) {
+        $amigo['avatar'] = $amigo['avatar'] ? '../' . $amigo['avatar'] : '../imagens/default_avatar.png';
+    }
+
+    send_json('ok', '', ['amigos' => $amigos]);
+}
+
+// ============================================================
+// ❤️ CURTIR / DESCURTIR POST (TOGGLE)
+// ============================================================
+if ($action === 'toggle_like') {
+    if (empty($_SESSION['user_id'])) send_json('error', 'Não autenticado.');
+
+    $post_id = (int)($_POST['post_id'] ?? 0);
+    $user_id = $_SESSION['user_id'];
+
+    if (!$post_id) send_json('error', 'Post inválido.');
+
+    // Verifica se já curtiu
+    $stmt = $pdo->prepare('SELECT id FROM likes WHERE user_id = ? AND post_id = ?');
+    $stmt->execute([$user_id, $post_id]);
+    $existingLike = $stmt->fetch();
+
+    if ($existingLike) {
+        // Se já curtiu, REMOVE (Descurtir)
+        $stmt = $pdo->prepare('DELETE FROM likes WHERE id = ?');
+        $stmt->execute([$existingLike['id']]);
+        $liked = false;
+    } else {
+        // Se não curtiu, ADICIONA (Curtir)
+        $stmt = $pdo->prepare('INSERT INTO likes (user_id, post_id) VALUES (?, ?)');
+        $stmt->execute([$user_id, $post_id]);
+        $liked = true;
+    }
+
+    // Conta o novo total de likes
+    $stmt = $pdo->prepare('SELECT COUNT(*) as total FROM likes WHERE post_id = ?');
+    $stmt->execute([$post_id]);
+    $count = $stmt->fetch()['total'];
+
+    send_json('ok', 'Sucesso', ['liked' => $liked, 'count' => $count]);
+}
+
 // ============================================================
 // 🚪 LOGOUT
 // ============================================================
 if ($action === 'logout') {
     session_destroy();
     send_json('ok', 'Logout realizado.');
+}
+
+// ==========================================================
+// AÇÃO: 'update_profile' (Atualiza Capa, Bio e Localização)
+// ==========================================================
+if ($action === 'update_profile') {
+    if (empty($_SESSION['user_id'])) send_json('error', 'Não autenticado');
+
+    $user_id = $_SESSION['user_id'];
+    $bio = $_POST['bio'] ?? '';
+    $localizacao = $_POST['localizacao'] ?? '';
+    $sobre = $_POST['sobre'] ?? ''; // O novo texto longo
+    
+    // Prepara a query básica
+    $sql = "UPDATE usuarios SET bio = ?, localizacao = ?, sobre = ?";
+    $params = [$bio, $localizacao, $sobre];
+
+    // --- LÓGICA DA CAPA ---
+    if (!empty($_FILES['capa']['name'])) {
+        
+        if ($_FILES['capa']['error'] !== UPLOAD_ERR_OK) {
+            send_json('error', "Erro no upload: Código " . $_FILES['capa']['error']);
+        }
+
+        $ext = pathinfo($_FILES['capa']['name'], PATHINFO_EXTENSION);
+        if (!in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+            send_json('error', 'Formato inválido.');
+        }
+
+        $filename = 'capa_' . $user_id . '_' . time() . '.' . $ext;
+        
+        // ==========================================================
+        // A CORREÇÃO ESTÁ AQUI: Removemos o '../'
+        // ==========================================================
+        $target = __DIR__ . '/imagens/' . $filename; // Caminho correto na pasta raiz
+        
+        if (move_uploaded_file($_FILES['capa']['tmp_name'], $target)) {
+            $capaPathDB = 'imagens/' . $filename;
+            
+            $sql .= ", capa = ?";
+            $params[] = $capaPathDB;
+            
+            // Adiciona o prefixo para a sessão também
+            $_SESSION['user_capa'] = '../' . $capaPathDB;
+        } else {
+            // Se ainda falhar aqui, é 100% permissão (chmod 777)
+            send_json('error', 'Falha ao mover arquivo. Verifique chmod 777 na pasta imagens.');
+        }
+    }
+
+    $sql .= " WHERE id = ?";
+    $params[] = $user_id;
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        
+        $_SESSION['user_bio'] = $bio;
+        $_SESSION['user_localizacao'] = $localizacao;
+        $_SESSION['user_sobre'] = $sobre; // <--- Atualiza a sessão aqui
+
+        send_json('ok', 'Perfil atualizado com sucesso!');
+    } catch (Exception $e) {
+        send_json('error', 'Erro SQL: ' . $e->getMessage());
+    }
 }
 
 // ============================================================

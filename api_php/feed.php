@@ -53,11 +53,11 @@ if (empty($_SESSION['user_id'])) {
             <nav class="menu">
                 <p class="menu-title">Painel de Controle</p>
                 <a href="profile.php" class="menu-item"><i class="fa fa-user"></i> Meu Perfil</a>
-                <a href="#" class="menu-item"><i class="fa fa-users"></i> Ver Amigos</a>
-                <a href="#" class="menu-item"><i class="fa fa-chart-line"></i> Análise de usuário</a>
+                <a href="search.php" class="menu-item"><i class="fa fa-users"></i> Buscar Usuários</a>
+                <!-- <a href="#" class="menu-item"><i class="fa fa-chart-line"></i> Análise de usuário</a>
                 <a href="#" class="menu-item"><i class="fa fa-cog"></i> Configurações</a>
                 <a href="#" class="menu-item"><i class="fa fa-shield-alt"></i> Security data</a>
-                <a href="#" class="menu-item logout"><i class="fa fa-sign-out-alt"></i> Sair</a>
+                <a href="#" class="menu-item logout"><i class="fa fa-sign-out-alt"></i> Sair</a> -->
             </nav>
         </aside>
 
@@ -81,6 +81,19 @@ if (empty($_SESSION['user_id'])) {
     </main>
 
     <script>
+        // --- Lógica da Barra de Busca (Enter para pesquisar) ---
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const term = searchInput.value.trim();
+                    if (term) {
+                        // Redireciona para a página de busca enviando o termo na URL
+                        window.location.href = `search.php?q=${encodeURIComponent(term)}`;
+                    }
+                }
+            });
+        }
         // =======================================================
         // DECLARAÇÕES DE CONSTANTES E VARIÁVEIS
         // =======================================================
@@ -119,12 +132,42 @@ if (empty($_SESSION['user_id'])) {
         // =======================================================
         // CARREGAR FEED
         // =======================================================
+
+         // Função unificada para Adicionar ou Remover
+        async function toggleFriend(btn, amigoId, isAdding) {
+            // Desabilita o botão para evitar cliques duplos
+            btn.disabled = true;
+            
+            const action = isAdding ? 'add_friend' : 'remove_friend';
+            const fd = new FormData();
+            fd.append('amigo_id', amigoId);
+
+            try {
+                const res = await fetch(`api.php?action=${action}`, { method: 'POST', body: fd });
+                const j = await res.json();
+                
+                if (j.status === 'ok') {
+                    // Recarrega o feed para atualizar todos os botões desse usuário na tela
+                    loadFeed(); 
+                } else {
+                    alert(j.msg);
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error(error);
+                btn.disabled = false;
+            }
+        }
+
+        // Função loadFeed ATUALIZADA
         async function loadFeed() {
             if (!postsContainer) return;
+            
             try {
                 const res = await fetch('api.php?action=list_posts');
                 if (!res.ok) throw new Error(`Falha na API: ${res.status}`);
                 const j = await res.json();
+                
                 postsContainer.innerHTML = '';
 
                 if (j.status === 'ok' && Array.isArray(j.posts)) {
@@ -132,26 +175,62 @@ if (empty($_SESSION['user_id'])) {
                         const div = document.createElement('div');
                         div.className = 'card post';
 
+                        // 1. Botão Excluir (Se for meu post)
                         let deleteButtonHtml = '';
                         if (p.user_id === LOGGED_IN_USER_ID) {
                             deleteButtonHtml = `<button class="delete-btn" data-postid="${p.id}">&times;</button>`;
                         }
 
-                        const userNameHtml = `
+                        // 2. Botão de Amigo (Se NÃO for meu post)
+                        let friendBtnHtml = '';
+                        if (p.user_id !== LOGGED_IN_USER_ID) {
+                            
+                            // Verifica se o campo is_friend veio como 1 (true) ou 0 (false)
+                            const isFriend = p.is_friend > 0;
+
+                            if (isFriend) {
+                                // JÁ É AMIGO: Botão Vermelho "Remover"
+                                friendBtnHtml = `
+                                    <button class="btn-friend remove" onclick="toggleFriend(this, ${p.user_id}, false)">
+                                        <i class="fa fa-user-minus"></i> Remover Amigo
+                                    </button>
+                                `;
+                            } else {
+                                // NÃO É AMIGO: Botão Verde "Adicionar"
+                                friendBtnHtml = `
+                                    <button class="btn-friend" onclick="toggleFriend(this, ${p.user_id}, true)">
+                                        <i class="fa fa-user-plus"></i> Adicionar
+                                    </button>
+                                `;
+                            }
+                        }
+
+                        const avatar = p.avatar ? `<img src="${p.avatar}" class="small-avatar">` : '<div class="small-avatar placeholder"></div>';
+                        const imgHtml = p.image ? `<div class="post-image"><img src="${p.image}"></div>` : '';
+
+                        // 3. Botão de Curtida
+                        const isLiked = p.user_liked > 0;
+                        const likeCount = p.like_count || 0;
+                        const likeClass = isLiked ? 'liked' : '';
+                        const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                        
+                        div.innerHTML = `
                             <div class="post-header">
-                                <strong class="user-name">${p.user_name || 'Usuário'}</strong>
+                                <div class="post-header-left">
+                                    <strong class="user-name">${escapeHtml(p.nome || 'Usuário')}</strong>
+                                    ${friendBtnHtml} </div>
                                 ${deleteButtonHtml}
                             </div>
-                        `;
-                        const imgHtml = p.image ? `
-                            <div class="post-image"><img src="${p.image}" alt="Imagem do post"></div>
-                        ` : '';
-
-                        div.innerHTML = `<div class="user-profile" style="display:flex"><img src="${p.avatar}" class="avatar"> ${userNameHtml}</div>
                             <div class="post-content">
                                 <p>${escapeHtml(p.content)}</p>
                                 ${imgHtml}
+                            </div>
+                            <div class="post-actions">
+                                <button class="like-btn ${likeClass}" data-postid="${p.id}">
+                                    <i class="${likeIcon}"></i> <span class="like-count">${likeCount}</span>
+                                </button>
                             </div>`;
+                        
                         postsContainer.appendChild(div);
                     });
                 } else {
@@ -159,10 +238,28 @@ if (empty($_SESSION['user_id'])) {
                 }
             } catch (error) {
                 console.error('Erro ao carregar o feed:', error);
-                postsContainer.innerHTML = '<p style="text-align: center; color: #777;">Erro ao carregar o feed.</p>';
             }
         }
 
+        // Função para chamar a API e adicionar o amigo
+            async function addFriend(amigoId) {
+                const fd = new FormData();
+                fd.append('amigo_id', amigoId);
+
+                try {
+                    const res = await fetch('api.php?action=add_friend', { 
+                        method: 'POST', 
+                        body: fd 
+                    });
+                    const j = await res.json();
+                    
+                    alert(j.msg); // Mostra "Amigo adicionado com sucesso!" ou erro
+                    
+                } catch (error) {
+                    console.error('Erro ao adicionar amigo:', error);
+                    alert('Erro de conexão.');
+                }
+            }
         // =======================================================
         // EVENTOS: DROPDOWN, LOGOUT, POSTAR, DELETAR
         // =======================================================
@@ -214,6 +311,7 @@ if (empty($_SESSION['user_id'])) {
 
         if (postsContainer) {
             postsContainer.addEventListener('click', async function(e) {
+                // Handle delete button
                 if (e.target && e.target.classList.contains('delete-btn')) {
                     if (!confirm('Tem certeza que deseja excluir este post?')) return;
                     const postId = e.target.getAttribute('data-postid');
@@ -227,6 +325,47 @@ if (empty($_SESSION['user_id'])) {
                     } catch (error) {
                         console.error('Erro ao deletar post:', error);
                         alert('Erro ao conectar com o servidor.');
+                    }
+                }
+                
+                // Handle like button
+                if (e.target && (e.target.classList.contains('like-btn') || e.target.closest('.like-btn'))) {
+                    const likeBtn = e.target.classList.contains('like-btn') ? e.target : e.target.closest('.like-btn');
+                    const postId = likeBtn.getAttribute('data-postid');
+                    
+                    // Desabilita o botão temporariamente
+                    likeBtn.disabled = true;
+                    
+                    const fd = new FormData();
+                    fd.append('post_id', postId);
+                    
+                    try {
+                        const res = await fetch('api.php?action=toggle_like', { method: 'POST', body: fd });
+                        const j = await res.json();
+                        
+                        if (j.status === 'ok') {
+                            const icon = likeBtn.querySelector('i');
+                            const countSpan = likeBtn.querySelector('.like-count');
+                            
+                            // Atualiza o visual do botão
+                            if (j.liked) {
+                                likeBtn.classList.add('liked');
+                                icon.className = 'fa-solid fa-heart';
+                            } else {
+                                likeBtn.classList.remove('liked');
+                                icon.className = 'fa-regular fa-heart';
+                            }
+                            
+                            // Atualiza o contador
+                            countSpan.textContent = j.count;
+                        } else {
+                            alert(j.msg);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao curtir post:', error);
+                        alert('Erro ao conectar com o servidor.');
+                    } finally {
+                        likeBtn.disabled = false;
                     }
                 }
             });
