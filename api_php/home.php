@@ -15,6 +15,7 @@ $result = $conn->query('SELECT p.*, u.nome FROM post p JOIN usuario u ON p.usuar
 <head>
   <meta charset="UTF-8">
   <title>Home - Peneirada</title>
+  <link rel="icon" type="image/svg+xml" href="assets/sieve-icon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>

@@ -5,6 +5,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Peneirada - Rede de Olheiros</title>
+  <meta name="description" content="Rede social para peneiradas, atletas e olheiros. Encontre oportunidades, publique treinos e conecte-se com clubes.">
+  <link rel="canonical" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http'); ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/api_php/index.php">
+  <meta property="og:title" content="Peneirada FC – Início">
+  <meta property="og:description" content="Rede social para peneiradas, atletas e olheiros.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http'); ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/api_php/index.php">
+  <meta property="og:image" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http'); ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/api_php/assets/logo.svg">
+  <meta property="og:site_name" content="Peneirada FC">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Peneirada FC – Início">
+  <meta name="twitter:description" content="Rede social para peneiradas, atletas e olheiros.">
+  <meta name="twitter:image" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http'); ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/api_php/assets/logo.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/sieve-icon.svg">
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
