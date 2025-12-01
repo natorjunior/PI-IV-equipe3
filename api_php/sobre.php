@@ -1,7 +1,7 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sobre - Peneirada</title><link rel="stylesheet" href="sobre.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sobre - Peneirada</title><link rel="icon" type="image/svg+xml" href="assets/sieve-icon.svg"><link rel="stylesheet" href="sobre.css"></head>
 <body>
 <header class="topbar">
     <div class="wrap">

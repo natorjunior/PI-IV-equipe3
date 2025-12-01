@@ -8,6 +8,7 @@ if(!empty($_SESSION['user_id'])) header('Location: feed.php');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cadastro - Peneirada</title>
+  <link rel="icon" type="image/svg+xml" href="assets/sieve-icon.svg">
   <link rel="stylesheet" href="cadastro.css">
 </head>
 <body>
