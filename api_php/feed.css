@@ -201,9 +201,15 @@ body {
 
 .card {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 /************************************************************/
@@ -212,122 +218,116 @@ body {
 /************************************************************/
 .feed > .card:first-child {
     padding: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
 }
+
 #postForm {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px;
+    gap: 16px;
+    padding: 24px;
 }
+
 #postForm textarea {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
     font-family: inherit;
     height: 120px;
     width: auto;
     resize: vertical; 
     background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+#postForm textarea:focus {
+    outline: none;
+    border-color: #3AD8C5;
+    box-shadow: 0 0 0 3px rgba(58, 216, 197, 0.1);
+}
+
 #postForm textarea::placeholder {
-    color: #888;
+    color: #999;
 }
 .post-options {
     display: flex;
-    flex-direction: column; 
+    justify-content: space-between;
+    align-items: center;
     gap: 12px; 
-    border-top: 1px solid #e0e0e0;
-    padding-top: 15px;
-    margin-top: 5px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+    margin-top: 8px;
 }
+
 /* =========================================
    PADRONIZAÇÃO DE IMAGENS DOS POSTS
    ========================================= */
+/* Removido daqui - movido para baixo junto com os estilos de post */
 
-/* 1. O Container da Imagem */
-.post-image {
-    width: 100%;          /* Ocupa 100% da largura do card */
-    height: 400px;        /* AL TURA FIXA: Define o padrão vertical */
-    margin-top: 15px;     /* Espaço entre o texto e a imagem */
-    background-color: #000; /* Fundo preto (bom para imagens que não carregam) */
-    border-radius: 8px;   /* Bordas arredondadas */
-    overflow: hidden;     /* Garante que nada saia para fora do container */
-    
-    /* Centraliza o conteúdo (caso a imagem seja menor que o container) */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 2. A Imagem em si */
-.post-image img {
-    width: 100%;
-    height: 100%;
-    
-    /* --- A MÁGICA ACONTECE AQUI --- */
-    object-fit: cover; 
-    /* cover: Faz a imagem preencher todo o espaço. 
-       Se a imagem for muito larga, corta as laterais.
-       Se for muito alta, corta o topo/base.
-       NUNCA estica ou deforma a imagem.
-    */
-    
-    display: block;
-}
 .option-label {
-    display: flex;
+    display: inline-flex;
     justify-content: center; 
     align-items: center;
-    gap: 6px;
-    padding: 10px 25px; 
-    border-radius: 6px;
-    color: #ffffff;
-    font-weight: bold;
+    gap: 8px;
+    padding: 10px 20px; 
+    border-radius: 10px;
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-    background-color: #0095f6;
-    border-radius: 6px;
-    transition: background 0.2s ease, transform 0.1s ease;
+    background-color: #f0f2f5;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
 }
+
 .option-label:hover {
     background-color: #e4e6eb; 
+    border-color: #3AD8C5;
+    color: #3AD8C5;
+    transform: translateY(-1px);
 }
+
 .option-label i {
-    font-size: 20px;
-    color: #000000; 
+    font-size: 18px;
 }
 
- .option-label {
-    display: inline-flex;
-}
-.option-label:hover {
-    background-color: #007acc;
-    transform: scale(1.03);
-        }
 .option-label.selected {
-    background-color: #2ecc71;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    border-color: #27ae60;
 }
 
+.option-label.selected i {
+    color: white;
+}
 
 #image {
     display: none;
 }
+
 .btn {
-    background-color: #3AD8C5;
+    background: linear-gradient(135deg, #3AD8C5 0%, #2BB8A8 100%);
     color: white;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 15px;
     border: none;
-    padding: 10px 25px;
-    border-radius: 6px;
+    padding: 12px 32px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
     flex-shrink: 0;
-    gap: 6px;
-    transition: background 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 8px rgba(58, 216, 197, 0.3);
 }
+
 .btn:hover {
-    background-color: #2abda9;
-    transform: scale(1.03);
+    background: linear-gradient(135deg, #2BB8A8 0%, #229987 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(58, 216, 197, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
 }
 
 
@@ -386,107 +386,140 @@ body {
 
 /*NOME DE USUÁRIO DENTRO DO POST*/
 .card.post {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 15px;
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 20px;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card.post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .post-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .post-header-left {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 12px;
 }
 
 .user-name {
     margin: 0;
     white-space: nowrap;
-    font-weight: 600;
-    color: #222;
-    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+}
+
+.post-content {
+    padding: 20px;
 }
 
 .post-content p {
-    margin: 8px 0;
-    color: #333;
+    margin: 0;
+    color: #2c3e50;
     font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
 }
 
 
 /* Botão Padrão (Adicionar) */
 .btn-friend {
-    background: none;
-    border: 1px solid #3AD8C5;
-    color: #3AD8C5;
-    border-radius: 4px;
-    padding: 3px 10px;
-    font-size: 11px;
+    background: linear-gradient(135deg, #3AD8C5 0%, #2BB8A8 100%);
+    border: none;
+    color: white;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     margin-left: 10px;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(58, 216, 197, 0.3);
 }
+
 .btn-friend:hover {
-    background: #3AD8C5;
-    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(58, 216, 197, 0.4);
+}
+
+.btn-friend:active {
+    transform: translateY(0);
 }
 
 /* Botão Remover (Vermelho) */
 .btn-friend.remove {
-    border-color: #e74c3c;
-    color: #e74c3c;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
 }
+
 .btn-friend.remove:hover {
-    background: #e74c3c;
-    color: white;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 /* ======= SISTEMA DE CURTIDAS ======= */
 .post-actions {
-    padding: 10px 0;
-    border-top: 1px solid #eee;
-    margin-top: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid #f0f0f0;
+    background: #fafbfc;
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
 .like-btn {
-    background: none;
-    border: none;
+    background: white;
+    border: 1px solid #e0e0e0;
     color: #666;
     font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border-radius: 4px;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
     transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .like-btn:hover {
-    background: #f8f9fa;
+    background: #fff5f5;
+    border-color: #ffcccb;
     color: #e74c3c;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
 }
 
 .like-btn.liked {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+    border-color: #e74c3c;
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.25);
 }
 
 .like-btn.liked:hover {
-    background: #ffeaea;
+    background: linear-gradient(135deg, #ff5252 0%, #d63230 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(231, 76, 60, 0.35);
 }
 
 .like-btn:disabled {
@@ -499,4 +532,97 @@ body {
     min-width: 20px;
     text-align: left;
 }
+
+/* ========================================
+   ESTILOS PARA AVATAR E LINK DO AUTOR
+======================================== */
+.small-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.small-avatar:hover {
+    transform: scale(1.05);
+}
+
+.small-avatar.placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.author-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.2s;
+}
+
+.author-link:hover {
+    opacity: 0.85;
+}
+
+.author-link .user-name {
+    transition: color 0.2s;
+}
+
+.author-link:hover .user-name {
+    color: #3AD8C5;
+}
+
+/* ========================================
+   IMAGEM DO POST
+======================================== */
+.post-image {
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+    display: block;
+}
+
+/* ========================================
+   BOTÃO DE DELETAR
+======================================== */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.delete-btn:hover {
+    background: #fee;
+    color: #e74c3c;
+    transform: rotate(90deg);
+}
+
 
