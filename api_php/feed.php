@@ -52,6 +52,7 @@ if (empty($_SESSION['user_id'])) {
             </div>
             <nav class="menu">
                 <p class="menu-title">Painel de Controle</p>
+                <a href="feed.php" class="menu-item"><i class="fa fa-home"></i> Feed</a>
                 <a href="profile.php" class="menu-item"><i class="fa fa-user"></i> Meu Perfil</a>
                 <a href="search.php" class="menu-item"><i class="fa fa-users"></i> Buscar Usuários</a>
                 <!-- <a href="#" class="menu-item"><i class="fa fa-chart-line"></i> Análise de usuário</a>
@@ -214,22 +215,37 @@ if (empty($_SESSION['user_id'])) {
                         const likeClass = isLiked ? 'liked' : '';
                         const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
                         
+                        // --- MONTAGEM DO HTML DO POST (ATUALIZADO) ---
                         div.innerHTML = `
                             <div class="post-header">
-                                <div class="post-header-left">
-                                    <strong class="user-name">${escapeHtml(p.nome || 'Usuário')}</strong>
-                                    ${friendBtnHtml} </div>
+                                <div class="post-header-left" style="display: flex; align-items: center; gap: 10px;">
+                                    
+                                    <img src="${p.avatar}" class="small-avatar" alt="Avatar" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                                    
+                                    <div style="display:flex; flex-direction:column; line-height: 1.2;">
+                                        <strong class="user-name" style="font-size: 14px; margin:0;">${escapeHtml(p.nome || 'Usuário')}</strong>
+                                        <small style="color:#888; font-size:11px;">${p.created_at}</small>
+                                    </div>
+
+                                    <div style="margin-left: 5px;">
+                                        ${friendBtnHtml}
+                                    </div>
+                                </div>
+                                
                                 ${deleteButtonHtml}
                             </div>
+
                             <div class="post-content">
                                 <p>${escapeHtml(p.content)}</p>
                                 ${imgHtml}
                             </div>
+
                             <div class="post-actions">
                                 <button class="like-btn ${likeClass}" data-postid="${p.id}">
                                     <i class="${likeIcon}"></i> <span class="like-count">${likeCount}</span>
                                 </button>
-                            </div>`;
+                            </div>
+                        `;
                         
                         postsContainer.appendChild(div);
                     });

@@ -50,6 +50,7 @@ $userName = $_SESSION['user_name'] ?? 'Usuário';
                 <p class="menu-title">Painel de Controle</p>
                 <a href="feed.php" class="menu-item"><i class="fa fa-home"></i> Feed</a>
                 <a href="profile.php" class="menu-item"><i class="fa fa-user"></i> Meu Perfil</a>
+                <a href="search.php" class="menu-item"><i class="fa fa-users"></i> Buscar Usuários</a>
                 <!-- <a href="#" class="menu-item"><i class="fa fa-chart-line"></i> Análise de usuário</a>
                 <a href="#" class="menu-item"><i class="fa fa-cog"></i> Configurações</a>
                 <a href="#" class="menu-item"><i class="fa fa-shield-alt"></i> Security data</a>
