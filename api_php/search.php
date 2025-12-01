@@ -37,9 +37,17 @@ $userName = $_SESSION['user_name'] ?? 'Usuário';
         <div class="header-center">
             <input type="text" placeholder="Search" class="search-input">
         </div>
+        
         <div class="header-right">
-            <div class="user-profile">
-                <img src="<?php echo htmlspecialchars($userAvatar); ?>" alt="User" class="avatar">
+            <div class="user-profile" id="userProfile">
+                <img src="<?php echo htmlspecialchars($_SESSION['user_avatar'] ?? '../imagens/default_avatar.png'); ?>" alt="User" class="avatar">
+                <div class="user-info">
+                    <span class="username">Usuário:<br><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></span>
+                </div>
+                <div class="dropdown" id="dropdownMenu">
+                    <a href="profile.php">Meu perfil</a>
+                    <a href="#" id="logoutLink">Sair</a> 
+                </div>
             </div>
         </div>
     </header>
@@ -74,6 +82,36 @@ $userName = $_SESSION['user_name'] ?? 'Usuário';
         document.querySelector('.search-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') window.location.href = `search.php?q=${encodeURIComponent(this.value)}`;
         });
+
+        // --- Lógica do Dropdown (NOVO NESTE ARQUIVO) ---
+        const userProfile = document.getElementById('userProfile');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        if (userProfile && dropdownMenu) {
+            userProfile.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                // Alterna entre mostrar e esconder
+                dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+            });
+        }
+        
+        // Fecha o menu se clicar fora
+        document.addEventListener('click', (e) => {
+            if (userProfile && !userProfile.contains(e.target)) {
+                if (dropdownMenu) dropdownMenu.style.display = 'none';
+            }
+        });
+
+        // --- Lógica de Logout (NOVO NESTE ARQUIVO) ---
+        const logoutLink = document.getElementById('logoutLink');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await fetch('api.php?action=logout');
+                location.href = 'index.php';
+            });
+        }
+
 
         // Função para buscar e exibir
         async function performSearch() {

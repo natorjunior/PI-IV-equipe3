@@ -45,17 +45,13 @@ if (empty($_SESSION['user_id'])) {
             <div class="user-profile" id="userProfile">
                 <img src="<?php echo htmlspecialchars($_SESSION['user_avatar'] ?? '../imagens/default_avatar.png'); ?>" alt="User" class="avatar">
                 <div class="user-info">
-                    <span class="username"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></span>
-                    <span class="user-handle">@<?php echo htmlspecialchars($_SESSION['user_handle'] ?? 'usuario'); ?></span>
+                    <span class="username">Usuário:<br><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></span>
                 </div>
                 <div class="dropdown" id="dropdownMenu">
                     <a href="profile.php">Meu perfil</a>
-                    <a href="#">Configurações</a>
                     <a href="#" id="logoutLink">Sair</a> 
                 </div>
             </div>
-            <button class="icon-button"><i class="fa fa-cog"></i></button>
-            <button class="icon-button"><i class="fa fa-bell"></i></button>
         </div>
     </header>
 
