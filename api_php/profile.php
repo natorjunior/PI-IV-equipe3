@@ -152,12 +152,12 @@ if ($isOwnProfile) {
                             <h1><?php echo htmlspecialchars($pName); ?></h1>
                             <span class="user-location">
                                 <i class="fa fa-map-marker-alt"></i> 
-                                <?php echo htmlspecialchars($pLoc); ?>
+                                <?php echo htmlspecialchars($pLoc ?? ''); ?>
                             </span>
                         </div>
                         
                         <p class="user-bio">
-                            <?php echo htmlspecialchars($pBio); ?>
+                            <?php echo htmlspecialchars($pBio ?? ''); ?>
                         </p>
 
                         <div class="profile-action-buttons">
@@ -220,15 +220,15 @@ if ($isOwnProfile) {
             </div>
                 <div class="form-group">
                     <label>Localização</label>
-                    <input type="text" name="localizacao" value="<?php echo htmlspecialchars($pLoc); ?>">
+                    <input type="text" name="localizacao" value="<?php echo htmlspecialchars($pLoc ?? ''); ?>">
                 </div>
                 <div class="form-group">
                     <label>Bio Curta (Manchete)</label>
-                    <input type="text" name="bio" value="<?php echo htmlspecialchars($pBio); ?>">
+                    <input type="text" name="bio" value="<?php echo htmlspecialchars($pBio ?? ''); ?>">
                 </div>
                 <div class="form-group">
                     <label>Sobre (Resumo Completo)</label>
-                    <textarea name="sobre" rows="5"><?php echo htmlspecialchars($pSobre); ?></textarea>
+                    <textarea name="sobre" rows="5"><?php echo htmlspecialchars($pSobre ?? ''); ?></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-cancel close-modal-btn">Cancelar</button>

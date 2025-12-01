@@ -335,7 +335,6 @@ body {
 /* Esta lógica foi pega do seu NOVO CSS */
 @media (max-width: 768px) {
     .search-input {
-        /* Ocultado para consistência (regra do CSS original era melhor) */
         display: none; 
     }
 
@@ -579,6 +578,12 @@ body {
 
 .author-link:hover .user-name {
     color: #3AD8C5;
+}
+
+/* Efeito hover para nome de usuário quando clicável */
+a .user-name:hover {
+    color: #3AD8C5;
+    text-decoration: underline;
 }
 
 /* ========================================

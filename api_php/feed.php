@@ -217,7 +217,7 @@ if (empty($_SESSION['user_id'])) {
                             }
                         }
 
-                        const avatar = p.avatar ? `<img src="${p.avatar}" class="small-avatar">` : '<div class="small-avatar placeholder"></div>';
+                        const avatarSrc = p.avatar || '../imagens/default_avatar.png';
                         const imgHtml = p.image ? `<div class="post-image"><img src="${p.image}"></div>` : '';
 
                         // 3. Botão de Curtida
@@ -231,10 +231,14 @@ if (empty($_SESSION['user_id'])) {
                             <div class="post-header">
                                 <div class="post-header-left" style="display: flex; align-items: center; gap: 10px;">
                                     
-                                    <img src="${p.avatar}" class="small-avatar" alt="Avatar" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                                    <a href="profile.php?id=${p.user_id}" style="text-decoration: none;">
+                                        <img src="${avatarSrc}" class="small-avatar" alt="Avatar" style="width:40px; height:40px; border-radius:50%; object-fit:cover; cursor: pointer;">
+                                    </a>
                                     
                                     <div style="display:flex; flex-direction:column; line-height: 1.2;">
-                                        <strong class="user-name" style="font-size: 14px; margin:0;">${escapeHtml(p.nome || 'Usuário')}</strong>
+                                        <a href="profile.php?id=${p.user_id}" style="text-decoration: none; color: inherit;">
+                                            <strong class="user-name" style="font-size: 14px; margin:0; cursor: pointer;">${escapeHtml(p.nome || 'Usuário')}</strong>
+                                        </a>
                                         <small style="color:#888; font-size:11px;">${p.created_at}</small>
                                     </div>
 
