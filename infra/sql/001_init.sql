@@ -55,3 +55,4 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     UNIQUE KEY unique_like (user_id, post_id) -- Garante que um usuário só curte 1 vez
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
